@@ -2,7 +2,7 @@
 #include "cocos2d.h"
 
 USING_NS_CC;
-
+ 
 class Assignment2 : public Scene
 {
 public:
