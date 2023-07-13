@@ -10,7 +10,7 @@ public:
 
 	virtual bool init();
 
-	virtual void update(float dt);
+	virtual void update(float dt); 
 
 	CREATE_FUNC(Assignment2);
 

@@ -5,7 +5,7 @@ USING_NS_CC;
 
 class Assignment1 : public Scene
 {
-public: 
+public:
 	static Scene* createScene();
 
 	virtual bool init();
