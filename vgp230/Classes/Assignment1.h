@@ -1,7 +1,6 @@
 #pragma once
 #pragma once
 #include "cocos2d.h"
-#include "Ball.h"
 
 USING_NS_CC;
 

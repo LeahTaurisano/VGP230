@@ -10,6 +10,9 @@
     <ClCompile Include="C:\GitHub\VGP230\vgp230\Classes\Assignment2.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
+    <ClCompile Include="C:\GitHub\VGP230\vgp230\Classes\CollisionTestScene.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
     <ClCompile Include="C:\GitHub\VGP230\vgp230\Classes\HelloWorldScene.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
@@ -18,9 +21,6 @@
     </ClCompile>
     <ClCompile Include="C:\GitHub\VGP230\vgp230\cocos2d\cocos\precheader.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Classes\Ball.cpp">
-      <Filter>Source Files\Classes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -31,6 +31,12 @@
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\Assignment2.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\CollisionComponent.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\CollisionTestScene.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\HelloWorldScene.h">
@@ -564,7 +570,7 @@
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\zombie_idle.png">
       <Filter>Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Ball.h">
+    <ClInclude Include="..\Classes\Bullets.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
   </ItemGroup>

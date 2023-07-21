@@ -27,7 +27,12 @@ bool Assignment2::init()
     healthBar->setPosition(Vec2(sprite1->getPosition().x, sprite1->getPosition().y - sprite1->getContentSize().height / 2));
     this->addChild(healthBar, 0);
 
-
+    for (Bullets &it : bullets)
+    {
+        it.bullet = Sprite::create("bullet2.png");
+        this->addChild(it.bullet, 0);
+        it.bullet->setVisible(false);
+    }
 
     auto keyboardListener = EventListenerKeyboard::create();
     keyboardListener->onKeyPressed = [=](EventKeyboard::KeyCode keyCode, Event* event)
@@ -96,26 +101,41 @@ bool Assignment2::init()
 
 void Assignment2::update(float dt)
 {
-    if (movingLeft)
-    {
-        sprite1->setPosition(Vec2(sprite1->getPosition().x - (dt * 200), sprite1->getPosition().y));
-    }
-    if (movingRight)
-    {
-        sprite1->setPosition(Vec2(sprite1->getPosition().x + (dt * 200), sprite1->getPosition().y));
-    }
-    if (movingUp)
-    {
-        sprite1->setPosition(Vec2(sprite1->getPosition().x, sprite1->getPosition().y + (dt * 200)));
-    }
-    if (movingDown)
-    {
-        sprite1->setPosition(Vec2(sprite1->getPosition().x, sprite1->getPosition().y - (dt * 200)));
-    }
+    if (movingLeft) sprite1->setPosition(Vec2(sprite1->getPosition().x - (dt * 200), sprite1->getPosition().y));
+    if (movingRight) sprite1->setPosition(Vec2(sprite1->getPosition().x + (dt * 200), sprite1->getPosition().y));
+    if (movingUp) sprite1->setPosition(Vec2(sprite1->getPosition().x, sprite1->getPosition().y + (dt * 200)));
+    if (movingDown) sprite1->setPosition(Vec2(sprite1->getPosition().x, sprite1->getPosition().y - (dt * 200)));
+
     if (isFiring)
     {
-        
+        if (iter == 100) iter = 0;
+        bullets[iter].fired = true;
+        bullets[iter].bullet->setVisible(true);
+        bullets[iter].bullet->setPosition(Vec2(sprite1->getPosition().x, sprite1->getPosition().y + sprite1->getContentSize().height / 2));
+
+        if (movingLeft) bullets[iter].firedLeft = true;
+        else if (movingRight) bullets[iter].firedRight = true;
+        isFiring = false;
+        ++iter;
     }
 
+    for (Bullets &it : bullets)
+    {
+        if (it.fired)
+        {
+            if (it.firedRight) it.bullet->setPosition(Vec2(it.bullet->getPosition().x + (dt * 200), it.bullet->getPosition().y + it.speed * dt));
+            else if (it.firedLeft) it.bullet->setPosition(Vec2(it.bullet->getPosition().x - (dt * 200), it.bullet->getPosition().y + it.speed * dt));
+            else it.bullet->setPosition(Vec2(it.bullet->getPosition().x, it.bullet->getPosition().y + (it.speed * dt)));
+            
+            if (it.bullet->getPosition().y >= Director::getInstance()->getVisibleSize().height)
+            {
+                it.fired = false;
+                it.firedLeft = false;
+                it.firedRight = false;
+                it.bullet->setVisible(false);
+                it.bullet->setPosition(0, 0);
+            }
+        }
+    }
     healthBar->setPosition(Vec2(sprite1->getPosition().x, sprite1->getPosition().y - sprite1->getContentSize().height / 2));
 }

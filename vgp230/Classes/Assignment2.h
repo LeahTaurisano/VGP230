@@ -1,5 +1,6 @@
 #pragma once
 #include "cocos2d.h"
+#include "Bullets.h"
 
 USING_NS_CC;
  
@@ -17,4 +18,6 @@ public:
 private:
 	Sprite* sprite1;
 	Sprite* healthBar;
+	Bullets bullets[100];
+	int iter = 0;
 };

@@ -809,17 +809,19 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Classes\Ball.h" />
+    <ClInclude Include="..\Classes\Bullets.h" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\AppDelegate.h" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\Assignment1.h" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\Assignment2.h" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\CollisionComponent.h" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\CollisionTestScene.h" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\HelloWorldScene.h" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\proj.win32\main.h" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\proj.win32\resource.h" />
-    <ClCompile Include="..\Classes\Ball.cpp" />
     <ClCompile Include="C:\GitHub\VGP230\vgp230\Classes\AppDelegate.cpp" />
     <ClCompile Include="C:\GitHub\VGP230\vgp230\Classes\Assignment1.cpp" />
     <ClCompile Include="C:\GitHub\VGP230\vgp230\Classes\Assignment2.cpp" />
+    <ClCompile Include="C:\GitHub\VGP230\vgp230\Classes\CollisionTestScene.cpp" />
     <ClCompile Include="C:\GitHub\VGP230\vgp230\Classes\HelloWorldScene.cpp" />
     <ClCompile Include="C:\GitHub\VGP230\vgp230\proj.win32\main.cpp" />
     <ResourceCompile Include="C:\GitHub\VGP230\vgp230\proj.win32\game.rc" />
