@@ -1,5 +1,7 @@
 #pragma once
+#pragma once
 #include "cocos2d.h"
+#include "Ball.h"
 
 USING_NS_CC;
 
@@ -12,7 +14,15 @@ public:
 
 	virtual void update(float dt);
 
+	Vec2 nextPos(Sprite* sprite, Vec2 speed, float dt);
+
+	void move(Sprite* sprite, Vec2& speed, float dt);
+
 	CREATE_FUNC(Assignment1);
 
 	Sprite* sprite1;
+	Sprite* sprite2;
+
+	Vec2 speed1;
+	Vec2 speed2;
 };
