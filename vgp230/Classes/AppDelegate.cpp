@@ -26,6 +26,7 @@
 #include "Assignment1.h"
 #include "Assignment2.h"
 #include "CollisionTestScene.h"
+#include "Assignment3.h"
 
 // #define USE_AUDIO_ENGINE 1
 
@@ -36,7 +37,7 @@ using namespace cocos2d::experimental;
 
 USING_NS_CC;
 
-static cocos2d::Size designResolutionSize = cocos2d::Size(1024, 768);
+static cocos2d::Size designResolutionSize = cocos2d::Size(768, 1024);
 static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
@@ -111,8 +112,9 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     // create a scene. it's an autorelease object
     //auto scene = Assignment1::createScene();
-    auto scene = Assignment2::createScene();
+    //auto scene = Assignment2::createScene();
     //auto scene = CollisionTestScene::create();
+    auto scene = Assignment3::createScene();
 
     // run
     director->runWithScene(scene);

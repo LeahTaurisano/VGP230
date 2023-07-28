@@ -16,11 +16,20 @@
     <ClCompile Include="C:\GitHub\VGP230\vgp230\Classes\HelloWorldScene.cpp">
       <Filter>Source Files\Classes</Filter>
     </ClCompile>
+    <ClCompile Include="C:\GitHub\VGP230\vgp230\Classes\MazeScene.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
     <ClCompile Include="C:\GitHub\VGP230\vgp230\proj.win32\main.cpp">
       <Filter>Source Files\proj.win32</Filter>
     </ClCompile>
     <ClCompile Include="C:\GitHub\VGP230\vgp230\cocos2d\cocos\precheader.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Assignment3.cpp">
+      <Filter>Source Files\Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Classes\Ship.cpp">
+      <Filter>Source Files\Classes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -33,6 +42,9 @@
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\Assignment2.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\Bullets.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\CollisionComponent.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
@@ -42,11 +54,17 @@
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\HelloWorldScene.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\MazeScene.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
     <ClInclude Include="C:\GitHub\VGP230\vgp230\proj.win32\main.h">
       <Filter>Source Files\proj.win32</Filter>
     </ClInclude>
     <ClInclude Include="C:\GitHub\VGP230\vgp230\proj.win32\resource.h">
       <Filter>Source Files\proj.win32</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\Cheese.png">
+      <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\CloseNormal.png">
       <Filter>Resources</Filter>
@@ -369,6 +387,42 @@
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\minerals.png">
       <Filter>Resources</Filter>
     </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-0.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-1.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-10.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-11.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-2.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-3.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-4.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-5.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-6.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-7.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-8.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-9.png">
+      <Filter>Resources</Filter>
+    </ClInclude>
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mushroom.png">
       <Filter>Resources</Filter>
     </ClInclude>
@@ -501,6 +555,15 @@
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\tesla.png">
       <Filter>Resources</Filter>
     </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\tmx\desert.tmx">
+      <Filter>Resources\tmx</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\tmx\tmw_desert_spacing.png">
+      <Filter>Resources\tmx</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\tmx\tmw_desert_spacing.tsx">
+      <Filter>Resources\tmx</Filter>
+    </ClInclude>
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\track_01.png">
       <Filter>Resources</Filter>
     </ClInclude>
@@ -570,7 +633,10 @@
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\zombie_idle.png">
       <Filter>Resources</Filter>
     </ClInclude>
-    <ClInclude Include="..\Classes\Bullets.h">
+    <ClInclude Include="..\Classes\Assignment3.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Classes\Ship.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
   </ItemGroup>
@@ -591,6 +657,9 @@
     </Filter>
     <Filter Include="Resources\res">
       <UniqueIdentifier>{DB05BDE1-BED6-3F78-A71C-F0A0B3CD5D13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources\tmx">
+      <UniqueIdentifier>{04BFE040-DA1B-3519-AFC2-17F995D65EC3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{F2F39493-B182-3C8D-B241-2EB53ECB1F9E}</UniqueIdentifier>

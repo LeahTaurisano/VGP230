@@ -113,7 +113,12 @@ void Assignment2::update(float dt)
         bullets[iter].bullet->setVisible(true);
         bullets[iter].bullet->setPosition(Vec2(sprite1->getPosition().x, sprite1->getPosition().y + sprite1->getContentSize().height / 2));
 
-        if (movingLeft) bullets[iter].firedLeft = true;
+        if (movingLeft && movingRight)
+        {
+            bullets[iter].firedLeft = false;
+            bullets[iter].firedRight = false;
+        }
+        else if (movingLeft) bullets[iter].firedLeft = true;
         else if (movingRight) bullets[iter].firedRight = true;
         isFiring = false;
         ++iter;

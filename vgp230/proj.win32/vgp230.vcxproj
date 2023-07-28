@@ -809,22 +809,29 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Classes\Bullets.h" />
+    <ClInclude Include="..\Classes\Assignment3.h" />
+    <ClInclude Include="..\Classes\Ship.h" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\AppDelegate.h" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\Assignment1.h" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\Assignment2.h" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\Bullets.h" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\CollisionComponent.h" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\CollisionTestScene.h" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\HelloWorldScene.h" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\MazeScene.h" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\proj.win32\main.h" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\proj.win32\resource.h" />
+    <ClCompile Include="..\Classes\Assignment3.cpp" />
+    <ClCompile Include="..\Classes\Ship.cpp" />
     <ClCompile Include="C:\GitHub\VGP230\vgp230\Classes\AppDelegate.cpp" />
     <ClCompile Include="C:\GitHub\VGP230\vgp230\Classes\Assignment1.cpp" />
     <ClCompile Include="C:\GitHub\VGP230\vgp230\Classes\Assignment2.cpp" />
     <ClCompile Include="C:\GitHub\VGP230\vgp230\Classes\CollisionTestScene.cpp" />
     <ClCompile Include="C:\GitHub\VGP230\vgp230\Classes\HelloWorldScene.cpp" />
+    <ClCompile Include="C:\GitHub\VGP230\vgp230\Classes\MazeScene.cpp" />
     <ClCompile Include="C:\GitHub\VGP230\vgp230\proj.win32\main.cpp" />
     <ResourceCompile Include="C:\GitHub\VGP230\vgp230\proj.win32\game.rc" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\Cheese.png" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\CloseNormal.png" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\CloseSelected.png" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\HelloWorld.png" />
@@ -932,6 +939,18 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mario_walk_01.png" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mario_walk_02.png" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\minerals.png" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-0.png" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-1.png" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-10.png" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-11.png" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-2.png" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-3.png" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-4.png" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-5.png" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-6.png" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-7.png" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-8.png" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mouse-9.png" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\mushroom.png" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\muzzle_flare.png" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\pikachu.png" />
@@ -976,6 +995,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\sword.png" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\terranscv.png" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\tesla.png" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\tmx\desert.tmx" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\tmx\tmw_desert_spacing.png" />
+    <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\tmx\tmw_desert_spacing.tsx" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\track_01.png" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\track_02.png" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Resources\track_03.png" />
