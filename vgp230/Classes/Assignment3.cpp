@@ -28,26 +28,34 @@ bool Assignment3::init()
     enemy.ship->setPosition(Vec2(origin.x + visibleSize.width / 2,
                                  visibleSize.height - (enemy.ship->getContentSize().height / 2) * enemy.ship->getScale()));
     enemy.speed = 100;
-    enemy.maxHealth = 200;
-    enemy.health = 200;
+    enemy.maxHealth = 100;
+    enemy.health = enemy.maxHealth;
     enemy.movingLeft = true;
     enemy.ship->addComponent(CollisionComponent::createCircle(enemy.ship->getContentSize().width));
-    this->addChild(enemy.ship, 0);
+    this->addChild(enemy.ship, 1);
 
     healthBar = Sprite::create("bar_red.png");
     healthBar->setScale(healthScale, 1);
     healthBar->setPosition(Vec2(visibleSize.width / 2, visibleSize.height - healthBar->getContentSize().height / 2));
-    this->addChild(healthBar, 1);
+    this->addChild(healthBar, 3);
     healthBarE = Sprite::create("bar_empty.png");
     healthBarE->setScale(healthScale, 1);
     healthBarE->setPosition(Vec2(visibleSize.width / 2, visibleSize.height - healthBarE->getContentSize().height / 2));
-    this->addChild(healthBarE, 0);
+    this->addChild(healthBarE, 2);
 
     for (Bullets& it : bullets)
     {
-        it.bullet = Sprite::create("bullet2.png");
+        it.bullet = Sprite::create("bullet_player.png");
         it.bullet->addComponent(CollisionComponent::createCircle(it.bullet->getContentSize().width / 2));
-        this->addChild(it.bullet, 0);
+        this->addChild(it.bullet, 1);
+        it.bullet->setVisible(false);
+    }
+
+    for (Bullets& it : enemyBullets)
+    {
+        it.bullet = Sprite::create("bullet_enemy.png");
+        it.bullet->addComponent(CollisionComponent::createCircle(it.bullet->getContentSize().width / 2));
+        this->addChild(it.bullet, 1);
         it.bullet->setVisible(false);
     }
 
@@ -115,7 +123,7 @@ bool Assignment3::init()
         }
     };
     _eventDispatcher->addEventListenerWithSceneGraphPriority(keyboardListener, this);
-
+    gameState = RUNNING;
     this->scheduleUpdate();
 
     return true;
@@ -155,118 +163,160 @@ void Assignment3::ResetBullet(Bullets &bullet)
 
 void Assignment3::update(float dt)
 {
-    Move(player, dt); //Player Movement
-    EnemyMove(enemy, dt); //Enemy Movement
-
-    if (player.isFiring) //Player Firing
+    if (gameState == RUNNING)
     {
-        if (iter == 100) iter = 0;
-        bullets[iter].fired = true;
-        bullets[iter].bullet->setVisible(true);
-        bullets[iter].bullet->setPosition(Vec2(player.ship->getPosition().x, player.ship->getPosition().y + player.ship->getContentSize().height / 2));
+        Move(player, dt); //Player Movement
 
-        if (player.movingLeft && player.movingRight)
+        EnemyMove(enemy, dt); //Enemy Movement
+
+        if (player.isFiring) //Player Firing
         {
-            bullets[iter].firedLeft = false;
-            bullets[iter].firedRight = false;
-        }
-        else if (player.movingLeft) bullets[iter].firedLeft = true;
-        else if (player.movingRight) bullets[iter].firedRight = true;
-        player.isFiring = false;
-        ++iter;
-    }
+            if (iter == 50) iter = 0;
+            bullets[iter].fired = true;
+            bullets[iter].bullet->setVisible(true);
+            bullets[iter].bullet->setPosition(Vec2(player.ship->getPosition().x, player.ship->getPosition().y + player.ship->getContentSize().height / 2));
 
-    for (Bullets& it : bullets) //Bullet Movement
-    {
-        if (it.fired)
-        {
-            if (it.firedRight) it.bullet->setPosition(Vec2(it.bullet->getPosition().x + (dt * it.speed), it.bullet->getPosition().y + it.speed * 3 * dt));
-            else if (it.firedLeft) it.bullet->setPosition(Vec2(it.bullet->getPosition().x - (dt * it.speed), it.bullet->getPosition().y + it.speed * 3 * dt));
-            else it.bullet->setPosition(Vec2(it.bullet->getPosition().x, it.bullet->getPosition().y + (it.speed * 3 * dt)));
-
-            if (it.bullet->getPosition().y >= Director::getInstance()->getVisibleSize().height)
+            if (player.movingLeft && player.movingRight)
             {
-                ResetBullet(it);
+                bullets[iter].firedLeft = false;
+                bullets[iter].firedRight = false;
             }
-            auto bulletCollision = dynamic_cast<CollisionComponent*>((it.bullet)->getComponent("CollisionComponent"));
-            auto shipCollision = dynamic_cast<CollisionComponent*>((enemy.ship)->getComponent("CollisionComponent"));
-
-            if (bulletCollision->IsColliding(shipCollision))
-            {
-                ResetBullet(it);
-                enemy.health -= it.damage;
-                healthScale -= (4.0 / enemy.maxHealth);
-                healthBar->setScale(healthScale, 1);
-            }
+            else if (player.movingLeft) bullets[iter].firedLeft = true;
+            else if (player.movingRight) bullets[iter].firedRight = true;
+            player.isFiring = false;
+            ++iter;
         }
-    }
 
-    debug->clear();
-    debug->setLineWidth(5);
-
-    for (auto it : this->getChildren())
-    {
-        if (auto collision = dynamic_cast<CollisionComponent*>(it->getComponent("CollisionComponent")))
+        if (enemyCanFire)
         {
-            collision->SetColliding(false);
+            if (enemyIter == 500) iter = 0;
+            enemyBullets[enemyIter].fired = true;
+            enemyBullets[enemyIter].bullet->setVisible(true);
+            enemyBullets[enemyIter].bullet->setPosition(Vec2(enemy.ship->getPosition().x, enemy.ship->getPosition().y - enemy.ship->getContentSize().height / 2 * enemy.ship->getScale()));
+            enemyCanFire = false;
+            ++enemyIter;
+            enemyFireDelay -= (1 * dt);
         }
-    }
-
-    auto& children = this->getChildren();
-
-    /// Determine all colliding objects
-    /// TODO: ADD CODE Here
-    for (auto it = children.begin(); it != children.end(); ++it)
-    {
-        for (auto it2 = it + 1; it2 != children.end(); ++it2)
+        if (enemyFireDelay < 1)
         {
-            auto collision = dynamic_cast<CollisionComponent*>((*it)->getComponent("CollisionComponent"));
-            auto collision2 = dynamic_cast<CollisionComponent*>((*it2)->getComponent("CollisionComponent"));
-
-            if (collision && collision2 && collision->IsColliding(collision2))
+            if (enemyFireDelay >= 0) enemyFireDelay -= (1 * dt);
+            else
             {
-                collision->SetColliding(true);
-                collision2->SetColliding(true);
+                enemyFireDelay = 1;
+                enemyCanFire = true;
             }
         }
-    }
-    ///
 
-    if (debugDrawOn)
-    {
-        for (auto it : this->getChildren())
+        for (Bullets& it : bullets) //Bullet Movement
         {
-            if (it->isVisible())
+            if (it.fired)
             {
-                auto collision = dynamic_cast<CollisionComponent*>(it->getComponent("CollisionComponent"));
+                if (it.firedRight) it.bullet->setPosition(Vec2(it.bullet->getPosition().x + (dt * it.speed), it.bullet->getPosition().y + it.speed * 3 * dt));
+                else if (it.firedLeft) it.bullet->setPosition(Vec2(it.bullet->getPosition().x - (dt * it.speed), it.bullet->getPosition().y + it.speed * 3 * dt));
+                else it.bullet->setPosition(Vec2(it.bullet->getPosition().x, it.bullet->getPosition().y + (it.speed * 3 * dt)));
 
-                if (collision != NULL)
+                if (it.bullet->getPosition().y >= Director::getInstance()->getVisibleSize().height)
                 {
-                    auto position = it->getPosition();
+                    ResetBullet(it);
+                }
+                auto bulletCollision = dynamic_cast<CollisionComponent*>((it.bullet)->getComponent("CollisionComponent"));
+                auto shipCollision = dynamic_cast<CollisionComponent*>((enemy.ship)->getComponent("CollisionComponent"));
 
-                    auto color = collision->IsColliding() ? Color4F::RED : Color4F::GREEN;
+                if (bulletCollision->IsColliding(shipCollision))
+                {
+                    ResetBullet(it);
+                    enemy.health -= it.damage;
+                    healthScale -= (4.0 / enemy.maxHealth);
+                    healthBar->setScale(healthScale, 1);
+                }
+            }
+        }
 
-                    switch (collision->GetCollisionType())
+        for (Bullets& it : enemyBullets) //Bullet Movement
+        {
+            if (it.fired)
+            {
+                it.bullet->setPosition(Vec2(it.bullet->getPosition().x, it.bullet->getPosition().y - (it.speed * 3 * dt)));
+
+                if (it.bullet->getPosition().y >= Director::getInstance()->getVisibleSize().height)
+                {
+                    ResetBullet(it);
+                }
+                auto bulletCollision = dynamic_cast<CollisionComponent*>((it.bullet)->getComponent("CollisionComponent"));
+                auto shipCollision = dynamic_cast<CollisionComponent*>((player.ship)->getComponent("CollisionComponent"));
+
+                if (bulletCollision->IsColliding(shipCollision))
+                {
+                    ResetBullet(it);
+                }
+            }
+        }
+
+        debug->clear();
+        debug->setLineWidth(5);
+        if (debugDrawOn)
+        {
+            for (auto it : this->getChildren())
+            {
+                if (it->isVisible())
+                {
+                    auto collision = dynamic_cast<CollisionComponent*>(it->getComponent("CollisionComponent"));
+
+                    if (collision != NULL)
                     {
-                    case CollisionComponent::Box:
-                    {
-                        auto dx = collision->GetWidth() / 2.0f;
-                        auto dy = collision->GetHeight() / 2.0f;
-                        debug->drawRect(Vec2(position.x - dx, position.y + dy), Vec2(position.x + dx, position.y + dy), Vec2(position.x + dx, position.y - dy), Vec2(position.x - dx, position.y - dy), color);
-                    }
-                    break;
-                    case CollisionComponent::Circle:
-                    {
-                        auto radius = collision->GetRadius();
-                        debug->drawCircle(position, radius, 10, 360, false, color);
-                    }
-                    break;
-                    case CollisionComponent::Point:
-                        debug->drawDot(position, 3, color);
+                        auto position = it->getPosition();
+
+                        auto color = Color4F::RED;
+
+                        switch (collision->GetCollisionType())
+                        {
+                        case CollisionComponent::Box:
+                        {
+                            auto dx = collision->GetWidth() / 2.0f;
+                            auto dy = collision->GetHeight() / 2.0f;
+                            debug->drawRect(Vec2(position.x - dx, position.y + dy), Vec2(position.x + dx, position.y + dy), Vec2(position.x + dx, position.y - dy), Vec2(position.x - dx, position.y - dy), color);
+                        }
                         break;
+                        case CollisionComponent::Circle:
+                        {
+                            auto radius = collision->GetRadius();
+                            debug->drawCircle(position, radius, 10, 360, false, color);
+                        }
+                        break;
+                        case CollisionComponent::Point:
+                            debug->drawDot(position, 3, color);
+                            break;
+                        }
                     }
                 }
             }
         }
+        debug->drawDot(player.ship->getPosition(), 3, Color4F::WHITE);
+
+        if (enemy.health <= 0)
+        {
+            for (Bullets& it : bullets)
+            {
+                ResetBullet(it);
+            }
+            gameState = BOSS_DEATH;
+        }
+    }
+    if (gameState == BOSS_DEATH)
+    {
+        if ((int)animationTime % 2 >= 1) enemy.ship->setPosition(enemy.ship->getPosition().x - (enemy.speed * dt) * 2, enemy.ship->getPosition().y + (enemy.speed * dt) / 3);
+        else enemy.ship->setPosition(enemy.ship->getPosition().x + (enemy.speed * dt) * 2, enemy.ship->getPosition().y + (enemy.speed * dt) / 3);
+        animationTime += (1 * dt);
+        if (animationTime >= 7)
+        {
+            animationTime = 0;
+            gameState = VICTORY;
+        }
+    }
+    if (gameState == VICTORY)
+    {
+        debug->clear();
+        player.movingUp = true;
+        Move(player, dt);
     }
 }
