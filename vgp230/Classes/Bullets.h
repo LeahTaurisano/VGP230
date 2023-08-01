@@ -9,17 +9,20 @@ public:
 	Sprite* bullet;
 	bool fired = false, firedLeft = false, firedRight = false, playerFired = false;
 	float speed = 100;
-	float damage = 1;
+	float bulletDamage;
 	float angleFired;
 	float firedX;
 	float cosCount = 0;
 	float timeActive = 0;
+	float firedRadius;
+	Vec2 centerPoint; //for circle attack
 
 	enum firedWith
 	{
 		SPIRAL,
 		SINE,
 		WAVE,
+		CIRCLE,
 		REGULAR
 	} firedWith = REGULAR;
 

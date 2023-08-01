@@ -10,6 +10,7 @@ public:
 	int health;
 	int maxHealth;
 	float speed;
+	float damage = 1;
 	Sprite* ship;
 	float animation = 0;
 	bool hasShield = false, hasBomb = false, hasDamage = false;
@@ -24,8 +25,9 @@ public:
 		SPIRAL,
 		SINE,
 		WAVE,
+		CIRCLE,
 		REGULAR
-	} BossAttacks = WAVE;
+	} BossAttacks = CIRCLE;
 
 	enum BossNumber
 	{
@@ -38,15 +40,19 @@ public:
 
 	void BulletSpiralMovement(Bullets it, float dt);
 
-	void BulletStraightMovement(Bullets it, float dt);
+	void BulletStraightMovement(Bullets it, float dt, float speedMod);
 
 	void BulletSineMovement(Bullets &it, float dt);
 
 	void BulletWaveMovement(Bullets& it, float dt);
+
+	void BulletCircleMovement(Bullets& it, float dt);
 
 	void SpiralAttack(int &enemyIter, Bullets enemyBullets[]);
 
 	void SineAttack(int& enemyIter, Bullets enemyBullets[], Ship enemy);
 
 	void WaveAttack(int& enemyIter, Bullets enemyBullets[]);
+
+	void CircleAttack(int& enemyIter, Bullets enemyBullets[]);
 };

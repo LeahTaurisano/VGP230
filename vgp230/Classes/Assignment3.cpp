@@ -16,11 +16,15 @@ bool Assignment3::init()
     auto visibleSize = Director::getInstance()->getVisibleSize(); //Create Screen
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-    Sprite* background = Sprite::create("space.jpg");
+    background = Sprite::create("space.jpg");
     background->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
     background->setRotation(270);
     background->setScale(2);
     this->addChild(background, -2);
+
+    bombEffect = LayerColor::create(Color4B::GRAY);
+    this->addChild(bombEffect, -3);
+    bombEffect->setVisible(false);
 
     //Sprite* test1 = Sprite::create("carriergun1_01.png");
     //test1->setScale(3);
@@ -98,17 +102,29 @@ bool Assignment3::init()
     this->addChild(healthBarE, 5);
     healthBarE->setVisible(false);
 
-    shieldUp = Sprite::create("Cheese.png");
+    shieldUp = Sprite::create("Cheese.png"); //Create shield
+    shieldUp->addComponent(CollisionComponent::createCircle(shieldUp->getContentSize().width));
     this->addChild(shieldUp, 0);
     shieldUp->setVisible(false);
 
-    damageUp = Sprite::create("Carrot.png");
+    playerShield = Sprite::create("shield.png"); //Create player shield
+    playerShield->setPosition(Vec2(player.ship->getContentSize().width / 2, player.ship->getContentSize().height / 2));
+    player.ship->addChild(playerShield, 0);
+    playerShield->setVisible(false);
+
+    damageUp = Sprite::create("Carrot.png"); //Create damage upgrade
+    damageUp->addComponent(CollisionComponent::createCircle(damageUp->getContentSize().width));
     this->addChild(damageUp, 0);
     damageUp->setVisible(false);
 
-    bombUp = Sprite::create("mushroom.png");
+    bombUp = Sprite::create("mushroom.png"); //Create bomb
+    bombUp->addComponent(CollisionComponent::createCircle(bombUp->getContentSize().width));
     this->addChild(bombUp, 0);
     bombUp->setVisible(false);
+
+    powerupPool.push_back(SHIELD); //Fill powerup pool
+    powerupPool.push_back(BOMB);
+    powerupPool.push_back(DAMAGE);
 
     for (Bullets& it : bullets) //Load player bullet pool
     {
@@ -157,6 +173,17 @@ bool Assignment3::init()
         case EventKeyboard::KeyCode::KEY_0:
             debugDrawOn = !debugDrawOn;
             break;
+        case EventKeyboard::KeyCode::KEY_B:
+            if (player.hasBomb)
+            {
+                player.hasBomb = false;
+                bombEffect->setVisible(true);
+                powerupPool.push_back(BOMB);
+                for (Bullets& it : enemyBullets)
+                {
+                    if (it.bullet->isVisible()) ResetBullet(it);
+                }
+            }
         default:
             break;
         }
@@ -299,6 +326,7 @@ void Assignment3::PlayerFire()
     {
         if (iter >= 50) iter = 0;
         bullets[iter].fired = true;
+        bullets[iter].bulletDamage = player.damage;
         bullets[iter].bullet->setVisible(true);
         bullets[iter].bullet->setPosition(Vec2(player.ship->getPosition().x, player.ship->getPosition().y + player.ship->getContentSize().height / 2));
 
@@ -322,6 +350,14 @@ void Assignment3::ResetBullet(Bullets &bullet) //Reset a bullet
     bullet.bullet->setVisible(false);
     bullet.bullet->setPosition(0, 0);
     bullet.timeActive = 0;
+}
+
+bool Assignment3::Collided(Sprite* first, Sprite* second) //Checks if any two objects collided
+{
+    auto firstCollision = dynamic_cast<CollisionComponent*>((first)->getComponent("CollisionComponent"));
+    auto secondCollision = dynamic_cast<CollisionComponent*>((second)->getComponent("CollisionComponent"));
+    if (firstCollision->IsColliding(secondCollision)) return true;
+    return false;
 }
 
 void Assignment3::update(float dt) //Game loop
@@ -361,8 +397,16 @@ void Assignment3::update(float dt) //Game loop
     }
     if (gameState == RUNNING)
     {
+        if (bombEffect->isVisible())
+        {
+            bombAnimationTimer -= 1 * dt;
+            if (bombAnimationTimer <= 0)
+            {
+                bombAnimationTimer = 0.05;
+                bombEffect->setVisible(false);
+            }
+        }
         Move(player, dt); //Player Movement
-
         EnemyMove(enemy, dt); //Enemy Movement
 
         if (enemy.firingAngle > 360) enemy.firingAngle = 0;
@@ -371,23 +415,24 @@ void Assignment3::update(float dt) //Game loop
 
         PlayerFire();
 
-        if (bossAttackTimer >= 8) //Boss Attack Chooser
-        {
-            int rand = (RandomHelper::random_int(0, 2));
-            if (rand == 0) enemy.BossAttacks = enemy.SPIRAL;
-            if (rand == 1) enemy.BossAttacks = enemy.SINE;
-            if (rand == 2) enemy.BossAttacks = enemy.WAVE;
-            bossAttackTimer = 0;
-            enemyFireDelay = enemy.GetFireDelay();
-            enemyCanFire = true;
-        }
-        bossAttackTimer += dt;
+        //if (bossAttackTimer >= 8) //Boss Attack Chooser
+        //{
+        //    int rand = (RandomHelper::random_int(0, 2));
+        //    if (rand == 0) enemy.BossAttacks = enemy.SPIRAL;
+        //    if (rand == 1) enemy.BossAttacks = enemy.SINE;
+        //    if (rand == 2) enemy.BossAttacks = enemy.WAVE;
+        //    bossAttackTimer = 0;
+        //    enemyFireDelay = enemy.GetFireDelay();
+        //    enemyCanFire = true;
+        //}
+        //bossAttackTimer += dt;
 
         if (enemyCanFire) //Enemy Firing
         {
             if (enemy.BossAttacks == enemy.SPIRAL) enemy.SpiralAttack(enemyIter, enemyBullets);
             if (enemy.BossAttacks == enemy.SINE) enemy.SineAttack(enemyIter, enemyBullets, enemy);
             if (enemy.BossAttacks == enemy.WAVE) enemy.WaveAttack(enemyIter, enemyBullets);
+            if (enemy.BossAttacks == enemy.CIRCLE) enemy.CircleAttack(enemyIter, enemyBullets);
             enemyCanFire = false;
             enemyFireDelay -= (1 * dt);
         }
@@ -414,23 +459,23 @@ void Assignment3::update(float dt) //Game loop
                 {
                     ResetBullet(it);
                 }
-                auto bulletCollision = dynamic_cast<CollisionComponent*>((it.bullet)->getComponent("CollisionComponent"));
-                auto shipCollision = dynamic_cast<CollisionComponent*>((enemy.ship)->getComponent("CollisionComponent"));
 
-                if (bulletCollision->IsColliding(shipCollision))
+                if (Collided(it.bullet, enemy.ship))
                 {
                     ResetBullet(it);
-                    enemy.health -= it.damage;
+                    enemy.health -= it.bulletDamage;
                     healthScale -= (4.0 / enemy.maxHealth);
                     healthBar->setScale(healthScale, 1);
 
-                    if (RandomHelper::random_int(0, 25) == 0 && chosenPowerup == READY && !(player.hasShield && player.hasBomb && player.hasDamage))
+                    if (RandomHelper::random_int(0, 1) == 0 && chosenPowerup == READY && !(player.hasShield && player.hasBomb && player.hasDamage))
                     {
-                        chosenPowerup = SHIELD; //Add functionality for random powerup and checks to ensure no duplicate spawns
+                        random = RandomHelper::random_int(0, (int)powerupPool.size() - 1);
+                        chosenPowerup = powerupPool[random];
+                        powerupPool.erase(powerupPool.begin() + random);
                     }
 
                 }
-            }
+            } 
         }
 
         if (chosenPowerup != READY) //Spawns Powerup
@@ -450,19 +495,69 @@ void Assignment3::update(float dt) //Game loop
                 damageUp->setPosition(enemy.firingPoint);
                 damageUp->setVisible(true);
             }
+
+            if (shieldUp->isVisible()) //Checks for player collision to powerup for collection, then add functionality
+            {
+                shieldUp->setPosition(shieldUp->getPosition().x, shieldUp->getPosition().y - (player.speed * dt));
+                if (shieldUp->getPosition().y <= 0)
+                {
+                    shieldUp->setVisible(false);
+                    powerupPool.push_back(SHIELD);
+                    chosenPowerup = READY;
+                }
+                if (Collided(shieldUp, player.ship))
+                {
+                    shieldUp->setVisible(false);
+                    playerShield->setVisible(true);
+                    chosenPowerup = READY;
+                    player.hasShield = true;
+                }
+            }
+            if (bombUp->isVisible())
+            {
+                bombUp->setPosition(bombUp->getPosition().x, bombUp->getPosition().y - (player.speed * dt));
+                if (bombUp->getPosition().y <= 0)
+                {
+                    bombUp->setVisible(false);
+                    powerupPool.push_back(BOMB);
+                    chosenPowerup = READY;
+                }
+                if (Collided(bombUp, player.ship))
+                {
+                    bombUp->setVisible(false);
+                    chosenPowerup = READY;
+                    player.hasBomb = true;
+                }
+            }
+            if (damageUp->isVisible())
+            {
+                damageUp->setPosition(damageUp->getPosition().x, damageUp->getPosition().y - (player.speed * dt));
+                if (damageUp->getPosition().y <= 0)
+                {
+                    damageUp->setVisible(false);
+                    powerupPool.push_back(DAMAGE);
+                    chosenPowerup = READY;
+                }
+                if (Collided(damageUp, player.ship))
+                {
+                    damageUp->setVisible(false);
+                    chosenPowerup = READY;
+                    player.hasDamage = true;
+                    player.damage = 1.5;
+                }
+            }
         }
 
-        if (shieldUp->isVisible()) //Checks for player collision to powerup for collection, then add functionality
+        if (player.hasDamage) //Damage powerup timer
         {
-            shieldUp->setPosition(shieldUp->getPosition().x, shieldUp->getPosition().y - (player.speed * dt));
-        }
-        if (bombUp->isVisible())
-        {
-            bombUp->setPosition(bombUp->getPosition().x, bombUp->getPosition().y - (player.speed * dt));
-        }
-        if (damageUp->isVisible())
-        {
-            damageUp->setPosition(damageUp->getPosition().x, damageUp->getPosition().y - (player.speed * dt));
+            damageDuration -= 1 * dt;
+            if (damageDuration <= 0)
+            {
+                damageDuration = 10;
+                player.hasDamage == false;
+                powerupPool.push_back(DAMAGE);
+                player.damage = 1;
+            }
         }
 
         for (Bullets& it : enemyBullets) //Enemy Bullet Movement
@@ -470,9 +565,10 @@ void Assignment3::update(float dt) //Game loop
             if (it.fired)
             {
                 if (it.firedWith == it.SPIRAL) enemy.BulletSpiralMovement(it, dt);
-                if (it.firedWith == it.SINE) enemy.BulletSineMovement(it, dt);
-                if (it.firedWith == it.WAVE) enemy.BulletWaveMovement(it, dt);
-                if (it.bullet->getPosition().y >= Director::getInstance()->getVisibleSize().height ||
+                else if (it.firedWith == it.SINE) enemy.BulletSineMovement(it, dt);
+                else if (it.firedWith == it.WAVE) enemy.BulletWaveMovement(it, dt);
+                else if (it.firedWith == it.CIRCLE) enemy.BulletCircleMovement(it, dt);
+                if (/*it.bullet->getPosition().y >= Director::getInstance()->getVisibleSize().height ||*/
                     it.bullet->getPosition().y <= 0/* ||
                     it.bullet->getPosition().x >= Director::getInstance()->getVisibleSize().width ||
                     it.bullet->getPosition().x <= 0*/
@@ -481,15 +577,23 @@ void Assignment3::update(float dt) //Game loop
                     ResetBullet(it);
                 }
                 it.timeActive += dt;
-                auto bulletCollision = dynamic_cast<CollisionComponent*>((it.bullet)->getComponent("CollisionComponent"));
-                auto shipCollision = dynamic_cast<CollisionComponent*>((player.ship)->getComponent("CollisionComponent"));
 
-                //if (bulletCollision->IsColliding(shipCollision))
-                //{
-                //    ResetBullet(it);
-                //    player.ship->setVisible(false);
-                //    gameState = GAME_OVER;
-                //}
+                if (Collided(it.bullet, player.ship))
+                {
+                    ResetBullet(it);
+                    if (player.hasShield)
+                    {
+                        player.hasShield = false;
+                        powerupPool.push_back(SHIELD);
+                        playerShield->setVisible(false);
+                    }
+                    else
+                    {
+                        ResetBullet(it);
+                        player.ship->setVisible(false);
+                        gameState = GAME_OVER;
+                    }
+                }
             }
         }
 
@@ -610,6 +714,27 @@ void Assignment3::update(float dt) //Game loop
     if (gameState == GAME_OVER)
     {
         debug->clear();
+        enemy.ship->setVisible(false);
+        healthBar->setVisible(false);
+        healthBarE->setVisible(false);
+        background->setVisible(true);
+        startOption->setVisible(true);
+        controlsOption->setVisible(true);
+        shieldUp->setVisible(false);
+        bombUp->setVisible(false);
+        damageUp->setVisible(false);
+        enemy.maxHealth = 200;
+        enemy.health = enemy.maxHealth;
+        healthBar->setScale(4, 1);
+        player.hasShield = false;
+        player.hasBomb = false;
+        player.hasDamage = false;
+        powerupPool.clear();
+        powerupPool.push_back(SHIELD);
+        powerupPool.push_back(BOMB);
+        powerupPool.push_back(DAMAGE);
+        chosenPowerup = READY;
+        gameState = MENU;
     }
 
 }

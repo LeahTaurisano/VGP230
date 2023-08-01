@@ -20,6 +20,8 @@ public:
 
     void ResetBullet(Bullets &bullet);
 
+    bool Collided(Sprite* first, Sprite* second);
+
     virtual void update(float dt);
 
     CREATE_FUNC(Assignment3);
@@ -45,7 +47,9 @@ public:
         DAMAGE,
     }chosenPowerup = READY;
 
+    std::vector<Powerup> powerupPool;
     Ship player;
+    Sprite* playerShield;
     Ship enemy;
     Sprite* enemyP1;
     Sprite* enemyA1;
@@ -55,13 +59,16 @@ public:
     Sprite* shieldUp;
     Sprite* damageUp;
     Sprite* bombUp;
+    Sprite* background;
     Bullets bullets[50];
     Bullets enemyBullets[1000];
     DrawNode* debug;
     Label* startOption;
     Label* controlsOption;
+    LayerColor* bombEffect;
     bool debugDrawOn = false;
     bool enemyCanFire = true;
+    int random;
     int iter = 0;
     int enemyIter = 0;
     int numMenuOptions = 2;
@@ -70,4 +77,6 @@ public:
     float animationTime = 0;
     float enemyFireDelay;
     float bossAttackTimer = 0;
+    float damageDuration = 10;
+    float bombAnimationTimer = 0.05;
 };
