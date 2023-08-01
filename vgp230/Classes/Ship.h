@@ -7,8 +7,11 @@ USING_NS_CC;
 class Ship
 {
 public:
-	int health;
-	int maxHealth;
+	float health;
+	float maxHealth;
+	int bossP1Health = 100;
+	int bossP2Health = 200;
+	int bossP3Health = 300;
 	float speed;
 	float damage = 1;
 	Sprite* ship;

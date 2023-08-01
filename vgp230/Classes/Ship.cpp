@@ -7,7 +7,7 @@ float Ship::GetFireDelay()
     if (BossAttacks == SINE) return 0.6 / ((int)BossNumber + 1);
     if (BossAttacks == SPIRAL) return 0.3 / ((int)BossNumber + 1);
     if (BossAttacks == WAVE) return 0.6 / ((int)BossNumber + 1);
-    if (BossAttacks == CIRCLE) return 0.8 / ((int)BossNumber + 1);
+    if (BossAttacks == CIRCLE) return 1.2 / ((int)BossNumber + 1);
 }
 
 void Ship::BulletSpiralMovement(Bullets it, float dt)

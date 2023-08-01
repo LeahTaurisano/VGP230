@@ -13,7 +13,7 @@ bool Assignment3::init()
         return false;
     }
 
-    auto visibleSize = Director::getInstance()->getVisibleSize(); //Create Screen
+    auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
     background = Sprite::create("space.jpg");
@@ -85,7 +85,7 @@ bool Assignment3::init()
 
     enemy.ship = enemyP1; //Create Enemy
     enemy.speed = 100;
-    enemy.maxHealth = 200;
+    enemy.maxHealth = 20;
     enemy.health = enemy.maxHealth;
     enemy.movingLeft = true;
     enemy.firingRadius = enemy.ship->getContentSize().width;
@@ -417,10 +417,11 @@ void Assignment3::update(float dt) //Game loop
 
         //if (bossAttackTimer >= 8) //Boss Attack Chooser
         //{
-        //    int rand = (RandomHelper::random_int(0, 2));
+        //    int rand = (RandomHelper::random_int(0, 3));
         //    if (rand == 0) enemy.BossAttacks = enemy.SPIRAL;
         //    if (rand == 1) enemy.BossAttacks = enemy.SINE;
         //    if (rand == 2) enemy.BossAttacks = enemy.WAVE;
+        //    if (rand == 3) enemy.BossAttacks = enemy.CIRCLE;
         //    bossAttackTimer = 0;
         //    enemyFireDelay = enemy.GetFireDelay();
         //    enemyCanFire = true;
@@ -464,7 +465,7 @@ void Assignment3::update(float dt) //Game loop
                 {
                     ResetBullet(it);
                     enemy.health -= it.bulletDamage;
-                    healthScale -= (4.0 / enemy.maxHealth);
+                    healthScale -= (4.0 / enemy.maxHealth); //Fix Healthbar to account for damage increase
                     healthBar->setScale(healthScale, 1);
 
                     if (RandomHelper::random_int(0, 1) == 0 && chosenPowerup == READY && !(player.hasShield && player.hasBomb && player.hasDamage))
@@ -587,12 +588,12 @@ void Assignment3::update(float dt) //Game loop
                         powerupPool.push_back(SHIELD);
                         playerShield->setVisible(false);
                     }
-                    else
-                    {
-                        ResetBullet(it);
-                        player.ship->setVisible(false);
-                        gameState = GAME_OVER;
-                    }
+                    //else
+                    //{
+                    //    ResetBullet(it);
+                    //    player.ship->setVisible(false);
+                    //    gameState = GAME_OVER;
+                    //}
                 }
             }
         }
@@ -713,6 +714,9 @@ void Assignment3::update(float dt) //Game loop
     }
     if (gameState == GAME_OVER)
     {
+        auto visibleSize = Director::getInstance()->getVisibleSize();
+        Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
         debug->clear();
         enemy.ship->setVisible(false);
         healthBar->setVisible(false);
@@ -723,12 +727,20 @@ void Assignment3::update(float dt) //Game loop
         shieldUp->setVisible(false);
         bombUp->setVisible(false);
         damageUp->setVisible(false);
-        enemy.maxHealth = 200;
+        enemy.maxHealth = enemy.bossP1Health;
         enemy.health = enemy.maxHealth;
-        healthBar->setScale(4, 1);
+        enemy.ship = enemyP1;
+        enemy.BossNumber = enemy.FIRST;
+        enemy.BossAttacks = enemy.WAVE;
+        healthScale = 4;
+        healthBar->setScale(healthScale, 1);
         player.hasShield = false;
         player.hasBomb = false;
         player.hasDamage = false;
+        player.ship->setPosition(Vec2(origin.x + visibleSize.width / 2,
+                                      origin.y + player.ship->getContentSize().height / 2));
+        enemyP1->setPosition(Vec2(origin.x + visibleSize.width / 2,
+                                  visibleSize.height - (enemyP1->getContentSize().height / 2) * enemyP1->getScale()));
         powerupPool.clear();
         powerupPool.push_back(SHIELD);
         powerupPool.push_back(BOMB);
