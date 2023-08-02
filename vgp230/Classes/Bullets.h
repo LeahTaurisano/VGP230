@@ -7,6 +7,8 @@ class Bullets
 {
 public:
 	Sprite* bullet;
+	Sprite* bulletBase;
+	Sprite* bulletUpgrade;
 	bool fired = false, firedLeft = false, firedRight = false, playerFired = false;
 	float speed = 100;
 	float bulletDamage;
@@ -23,8 +25,7 @@ public:
 		SINE,
 		WAVE,
 		CIRCLE,
-		REGULAR
-	} firedWith = REGULAR;
+	} firedWith;
 
 	enum fireDirection
 	{

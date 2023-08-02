@@ -10,6 +10,13 @@ float Ship::GetFireDelay()
     if (BossAttacks == CIRCLE) return 1.2 / ((int)BossNumber + 1);
 }
 
+float Ship::GetAttackSwapDelay()
+{
+    if (BossNumber == FIRST) return 7.0;
+    if (BossNumber == SECOND) return 4.5;
+    if (BossNumber == THIRD) return 2;
+}
+
 void Ship::BulletSpiralMovement(Bullets it, float dt)
 {
     auto prevX = it.bullet->getPosition().x;

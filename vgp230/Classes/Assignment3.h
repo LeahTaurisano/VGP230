@@ -18,9 +18,15 @@ public:
 
     void PlayerFire();
 
+    void PlayerAutoCheck(float dt);
+
     void ResetBullet(Bullets &bullet);
 
     bool Collided(Sprite* first, Sprite* second);
+
+    void MoveUpgrades(float dt);
+
+    void ResetToMenu();
 
     virtual void update(float dt);
 
@@ -32,11 +38,14 @@ public:
         START,
         MENU,
         CONTROLS,
+        BOSS_INTRO,
         RUNNING,
         BOSS_PHASE,
+        PHASE_ANIMATION,
         BOSS_DEATH,
         GAME_OVER,
-        VICTORY
+        VICTORY,
+        END_SCREEN
     } gameState = START;
 
     enum Powerup
@@ -51,7 +60,10 @@ public:
     Ship player;
     Sprite* playerShield;
     Ship enemy;
+    Sprite* enemyP2Glow;
+    Sprite* enemyP3Glow;
     Sprite* enemyP1;
+    Sprite* enemyP2;
     Sprite* enemyA1;
     Sprite* enemyA2;
     Sprite* healthBar;
@@ -65,15 +77,19 @@ public:
     DrawNode* debug;
     Label* startOption;
     Label* controlsOption;
+    Label* victoryText;
+    Label* victoryText2;
     LayerColor* bombEffect;
     bool debugDrawOn = false;
     bool enemyCanFire = true;
+    bool resetGame = false;
     int random;
     int iter = 0;
     int enemyIter = 0;
     int numMenuOptions = 2;
     int selectedOption = 1;
-    float healthScale = 4;
+    float baseHealthScale = 4;
+    float healthScale = 0;
     float animationTime = 0;
     float enemyFireDelay;
     float bossAttackTimer = 0;

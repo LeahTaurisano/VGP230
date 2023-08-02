@@ -46,7 +46,17 @@ bool Assignment3::init()
     controlsOption->setColor(Color3B::GRAY);
     this->addChild(controlsOption, -1);
 
-    Label* controls = Label::createWithSystemFont("W: Move Up\nS: Move Down\nA: Move Left\nD: Move Right\nEnter: Return to Menu", "arial.ttf", 20.f);
+    victoryText = Label::createWithSystemFont("Congratulations!", "arial.ttf", 40.f);
+    victoryText->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 1.5));
+    this->addChild(victoryText, -1);
+    victoryText->setVisible(false);
+
+    victoryText2 = Label::createWithSystemFont("Press Enter to return to the main menu\nPress ESC to close the game!", "arial.ttf", 20.f);
+    victoryText2->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2.5));
+    this->addChild(victoryText2, -1);
+    victoryText2->setVisible(false);
+
+    Label* controls = Label::createWithSystemFont("\nDefeat the Boss while not letting bullets touch your core!\nW: Move Up\nS: Move Down\nA: Move Left\nD: Move Right\nSpacebar: Fire\n\nPickups\nShield: Blocks the next player hit\nBomb: Hit B to clear all bullets on screen\nDamage: Increases damage by 50% for a short time\n\nEnter: Return to Menu", "arial.ttf", 20.f);
     controls->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
     this->addChild(controls, -1);
     controls->setVisible(false);
@@ -59,15 +69,23 @@ bool Assignment3::init()
     this->addChild(player.ship, 0);
     player.ship->setVisible(false);
 
-    enemyP1 = Sprite::create("carrier_01.png"); //Enemy Phase 1 Sprite
+    enemyP1 = Sprite::create("carrierFirstForm.png"); //Enemy Phase 1 Sprite
     enemyP1->setScale(3);
     enemyP1->setPosition(Vec2(origin.x + visibleSize.width / 2,
-        visibleSize.height - (enemyP1->getContentSize().height / 2) * enemyP1->getScale()));
+        visibleSize.height - ((enemyP1->getContentSize().height / 2) * enemyP1->getScale()) + 500));
     enemyP1->addComponent(CollisionComponent::createCircle(enemyP1->getContentSize().width));
     this->addChild(enemyP1, 1);
     enemyP1->setVisible(false);
 
-    enemyA1 = Sprite::create("carrierphase3_flap1.2.png"); //Enemy Animation Sprite
+    enemyP2 = Sprite::create("carrier_01.png"); //Enemy Phase 2 Sprite
+    enemyP2->setScale(3);
+    enemyP2->setPosition(Vec2(origin.x + visibleSize.width / 2,
+        visibleSize.height - (enemyP2->getContentSize().height / 2) * enemyP2->getScale()));
+    enemyP2->addComponent(CollisionComponent::createCircle(enemyP2->getContentSize().width));
+    this->addChild(enemyP2, 1);
+    enemyP2->setVisible(false);
+
+    enemyA1 = Sprite::create("carrierphase3_flap1.2.png"); //Enemy P3 Animation Sprite
     enemyA1->setScale(3);
     enemyA1->setPosition(Vec2(origin.x + visibleSize.width / 2,
                                  visibleSize.height - (enemyA1->getContentSize().height / 2) * enemyA1->getScale()));
@@ -75,7 +93,7 @@ bool Assignment3::init()
     this->addChild(enemyA1, 1);
     enemyA1->setVisible(false);
 
-    enemyA2 = Sprite::create("carrierphase3_flap2.png"); //Enemy Animation Sprite
+    enemyA2 = Sprite::create("carrierphase3_flap2.png"); //Enemy P3 Animation Sprite
     enemyA2->setScale(3);
     enemyA2->setPosition(Vec2(origin.x + visibleSize.width / 2,
                               visibleSize.height - (enemyA2->getContentSize().height / 2) * enemyA2->getScale()));
@@ -85,11 +103,23 @@ bool Assignment3::init()
 
     enemy.ship = enemyP1; //Create Enemy
     enemy.speed = 100;
-    enemy.maxHealth = 20;
+    enemy.maxHealth = enemy.bossP1Health;
     enemy.health = enemy.maxHealth;
     enemy.movingLeft = true;
     enemy.firingRadius = enemy.ship->getContentSize().width;
     enemyFireDelay = enemy.GetFireDelay();
+
+    enemyP2Glow = Sprite::create("carrierP2Glow2.png"); //Create player shield
+    enemyP2Glow->setPosition(Vec2(origin.x + visibleSize.width / 2, visibleSize.height - (enemyP1->getContentSize().height / 2) * enemyP1->getScale()));
+    enemyP2Glow->setScale(3);
+    this->addChild(enemyP2Glow, 2);
+    enemyP2Glow->setVisible(false);
+
+    enemyP3Glow = Sprite::create("carrierP3Glow.png"); //Create player shield
+    enemyP3Glow->setPosition(Vec2(origin.x + visibleSize.width / 2, visibleSize.height - (enemyP1->getContentSize().height / 2) * enemyP1->getScale()));
+    enemyP3Glow->setScale(3);
+    this->addChild(enemyP3Glow, 2);
+    enemyP3Glow->setVisible(false);
 
     healthBar = Sprite::create("bar_red.png"); //Create healthbars
     healthBar->setScale(healthScale, 1);
@@ -97,7 +127,7 @@ bool Assignment3::init()
     this->addChild(healthBar, 6);
     healthBar->setVisible(false);
     healthBarE = Sprite::create("bar_empty.png");
-    healthBarE->setScale(healthScale, 1);
+    healthBarE->setScale(baseHealthScale, 1);
     healthBarE->setPosition(Vec2(visibleSize.width / 2, visibleSize.height - healthBarE->getContentSize().height / 2));
     this->addChild(healthBarE, 5);
     healthBarE->setVisible(false);
@@ -128,17 +158,22 @@ bool Assignment3::init()
 
     for (Bullets& it : bullets) //Load player bullet pool
     {
-        it.bullet = Sprite::create("bullet_player.png");
-        it.bullet->addComponent(CollisionComponent::createCircle(it.bullet->getContentSize().width / 2));
-        this->addChild(it.bullet, 1);
-        it.bullet->setVisible(false);
+        it.bulletBase = Sprite::create("bullet_player.png");
+        it.bulletBase->addComponent(CollisionComponent::createCircle(it.bulletBase->getContentSize().width / 2));
+        this->addChild(it.bulletBase, 1);
+        it.bulletBase->setVisible(false);
+        it.bulletUpgrade = Sprite::create("bullet1.png");
+        it.bulletUpgrade->addComponent(CollisionComponent::createCircle(it.bulletBase->getContentSize().width / 2));
+        this->addChild(it.bulletUpgrade, 1);
+        it.bulletUpgrade->setVisible(false);
+        it.bullet = it.bulletBase;
     }
 
     for (Bullets& it : enemyBullets) //Load enemy bullet pool
     {
         it.bullet = Sprite::create("bullet_enemy.png");
         it.bullet->setScale(3);
-        it.bullet->addComponent(CollisionComponent::createCircle(it.bullet->getContentSize().width / 2 * (it.bullet->getScale() - 1)));
+        it.bullet->addComponent(CollisionComponent::createCircle(it.bullet->getContentSize().width / 2.5 * (it.bullet->getScale() - 1)));
         this->addChild(it.bullet, 4);
         it.bullet->setVisible(false);
     }
@@ -168,11 +203,22 @@ bool Assignment3::init()
             break;
 
         case EventKeyboard::KeyCode::KEY_SPACE:
-            player.isFiring = true;
+            if (gameState == RUNNING || gameState == CONTROLS)
+            {
+                player.isFiring = true;
+                PlayerFire();
+                player.autoFire = true;
+            }
             break;
+
         case EventKeyboard::KeyCode::KEY_0:
             debugDrawOn = !debugDrawOn;
             break;
+
+        case EventKeyboard::KeyCode::KEY_GRAVE:
+            player.godMode = !player.godMode;
+            break;
+
         case EventKeyboard::KeyCode::KEY_B:
             if (player.hasBomb)
             {
@@ -184,6 +230,12 @@ bool Assignment3::init()
                     if (it.bullet->isVisible()) ResetBullet(it);
                 }
             }
+            break;
+
+        case EventKeyboard::KeyCode::KEY_ESCAPE:
+            if (gameState == MENU || gameState == END_SCREEN) Director::getInstance()->end();
+                break;
+
         default:
             break;
         }
@@ -209,9 +261,7 @@ bool Assignment3::init()
                     controlsOption->setVisible(false);
                     enemy.ship->setVisible(true);
                     player.ship->setVisible(true);
-                    healthBar->setVisible(true);
-                    healthBarE->setVisible(true);
-                    gameState = RUNNING;
+                    gameState = BOSS_INTRO;
                 }
                 else if (selectedOption == 2)
                 {
@@ -240,6 +290,10 @@ bool Assignment3::init()
                 gameState = MENU;
             }
         }
+        else if (gameState == END_SCREEN)
+        {
+            if (keyCode == EventKeyboard::KeyCode::KEY_ENTER) resetGame = true;
+        }
     };
 
     keyboardListener->onKeyReleased = [=](EventKeyboard::KeyCode keyCode, Event* event) //Player controls release
@@ -264,6 +318,8 @@ bool Assignment3::init()
 
         case EventKeyboard::KeyCode::KEY_SPACE:
             player.isFiring = false;
+            player.autoFire = false;
+            player.autoFireTimer = 0;
             break;
 
         default:
@@ -279,10 +335,20 @@ bool Assignment3::init()
 
 void Assignment3::Move(Ship toMove, float dt) //Movement for both ships
 {
-    if (toMove.movingLeft) toMove.ship->setPosition(Vec2(toMove.ship->getPosition().x - (dt * toMove.speed), toMove.ship->getPosition().y));
-    if (toMove.movingRight) toMove.ship->setPosition(Vec2(toMove.ship->getPosition().x + (dt * toMove.speed), toMove.ship->getPosition().y));
-    if (toMove.movingUp) toMove.ship->setPosition(Vec2(toMove.ship->getPosition().x, toMove.ship->getPosition().y + (dt * toMove.speed)));
-    if (toMove.movingDown) toMove.ship->setPosition(Vec2(toMove.ship->getPosition().x, toMove.ship->getPosition().y - (dt * toMove.speed)));
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+    if (toMove.movingLeft && toMove.ship->getPosition().x - (dt * toMove.speed) > origin.x + toMove.ship->getContentSize().width / 3) 
+        toMove.ship->setPosition(Vec2(toMove.ship->getPosition().x - (dt * toMove.speed), toMove.ship->getPosition().y));
+
+    if (toMove.movingRight && toMove.ship->getPosition().x + (dt * toMove.speed) < visibleSize.width - toMove.ship->getContentSize().width / 3)
+        toMove.ship->setPosition(Vec2(toMove.ship->getPosition().x + (dt * toMove.speed), toMove.ship->getPosition().y));
+
+    if (toMove.movingUp && toMove.ship->getPosition().y + (dt * toMove.speed) < visibleSize.height - toMove.ship->getContentSize().height / 3)
+        toMove.ship->setPosition(Vec2(toMove.ship->getPosition().x, toMove.ship->getPosition().y + (dt * toMove.speed)));
+
+    if (toMove.movingDown && toMove.ship->getPosition().y - (dt * toMove.speed) > origin.y + toMove.ship->getContentSize().height / 3)
+        toMove.ship->setPosition(Vec2(toMove.ship->getPosition().x, toMove.ship->getPosition().y - (dt * toMove.speed)));
 }
 
 void Assignment3::EnemyMove(Ship &toMove, float dt) //Enemy specific movement
@@ -327,6 +393,7 @@ void Assignment3::PlayerFire()
         if (iter >= 50) iter = 0;
         bullets[iter].fired = true;
         bullets[iter].bulletDamage = player.damage;
+        if (player.hasDamage) bullets[iter].bullet = bullets[iter].bulletUpgrade;
         bullets[iter].bullet->setVisible(true);
         bullets[iter].bullet->setPosition(Vec2(player.ship->getPosition().x, player.ship->getPosition().y + player.ship->getContentSize().height / 2));
 
@@ -342,8 +409,28 @@ void Assignment3::PlayerFire()
     }
 }
 
+void Assignment3::PlayerAutoCheck(float dt)
+{
+    if (player.autoFire)
+    {
+        if (player.autoFireTimer >= 0.2)
+        {
+            player.autoFireTimer = 0;
+            player.isFiring = true;
+            PlayerFire();
+        }
+        else player.autoFireTimer += dt;
+    }
+}
+
 void Assignment3::ResetBullet(Bullets &bullet) //Reset a bullet
 {
+    if (bullet.bullet == bullet.bulletUpgrade)
+    {
+        bullet.bullet->setVisible(false);
+        bullet.bullet->setPosition(0, 0);
+        bullet.bullet = bullet.bulletBase;
+    }
     bullet.fired = false;
     bullet.firedLeft = false;
     bullet.firedRight = false;
@@ -360,10 +447,113 @@ bool Assignment3::Collided(Sprite* first, Sprite* second) //Checks if any two ob
     return false;
 }
 
+void Assignment3::MoveUpgrades(float dt)
+{
+    if (shieldUp->isVisible()) //Checks for player collision to powerup for collection, then add functionality
+    {
+        shieldUp->setPosition(shieldUp->getPosition().x, shieldUp->getPosition().y - (player.speed * dt));
+        if (shieldUp->getPosition().y <= 0)
+        {
+            shieldUp->setVisible(false);
+            powerupPool.push_back(SHIELD);
+            chosenPowerup = READY;
+        }
+        if (Collided(shieldUp, player.ship))
+        {
+            shieldUp->setVisible(false);
+            playerShield->setVisible(true);
+            chosenPowerup = READY;
+            player.hasShield = true;
+        }
+    }
+    if (bombUp->isVisible())
+    {
+        bombUp->setPosition(bombUp->getPosition().x, bombUp->getPosition().y - (player.speed * dt));
+        if (bombUp->getPosition().y <= 0)
+        {
+            bombUp->setVisible(false);
+            powerupPool.push_back(BOMB);
+            chosenPowerup = READY;
+        }
+        if (Collided(bombUp, player.ship))
+        {
+            bombUp->setVisible(false);
+            chosenPowerup = READY;
+            player.hasBomb = true;
+        }
+    }
+    if (damageUp->isVisible())
+    {
+        damageUp->setPosition(damageUp->getPosition().x, damageUp->getPosition().y - (player.speed * dt));
+        if (damageUp->getPosition().y <= 0)
+        {
+            damageUp->setVisible(false);
+            powerupPool.push_back(DAMAGE);
+            chosenPowerup = READY;
+        }
+        if (Collided(damageUp, player.ship))
+        {
+            damageUp->setVisible(false);
+            chosenPowerup = READY;
+            player.hasDamage = true;
+            player.damage = 1.5;
+        }
+    }
+}
+
+void Assignment3::ResetToMenu() //Reset and return to menu
+{
+    auto visibleSize = Director::getInstance()->getVisibleSize();
+    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+    debug->clear();
+    enemy.ship->setVisible(false);
+    player.ship->setVisible(false);
+    healthBar->setVisible(false);
+    healthBarE->setVisible(false);
+    background->setVisible(true);
+    startOption->setVisible(true);
+    controlsOption->setVisible(true);
+    shieldUp->setVisible(false);
+    bombUp->setVisible(false);
+    damageUp->setVisible(false);
+    victoryText->setVisible(false);
+    victoryText2->setVisible(false);
+    playerShield->setVisible(false);
+    enemy.maxHealth = enemy.bossP1Health;
+    enemy.health = enemy.maxHealth;
+    enemy.ship = enemyP1;
+    enemy.BossNumber = enemy.FIRST;
+    enemy.BossAttacks = enemy.WAVE;
+    healthScale = 0;
+    healthBar->setScale(healthScale, 1);
+    damageDuration = 10;
+    player.hasShield = false;
+    player.hasBomb = false;
+    player.hasDamage = false;
+    player.godMode = false;
+    player.movingDown = false;
+    player.movingUp = false;
+    player.movingLeft = false;
+    player.movingRight = false;
+    resetGame = false;
+    player.ship->setPosition(Vec2(origin.x + visibleSize.width / 2,
+        origin.y + player.ship->getContentSize().height / 2));
+    enemyP1->setPosition(Vec2(origin.x + visibleSize.width / 2,
+        visibleSize.height - ((enemyP1->getContentSize().height / 2) * enemyP1->getScale()) + 500));
+    powerupPool.clear();
+    powerupPool.push_back(SHIELD);
+    powerupPool.push_back(BOMB);
+    powerupPool.push_back(DAMAGE);
+    chosenPowerup = READY;
+    gameState = MENU;
+}
+
 void Assignment3::update(float dt) //Game loop
 {
     if (gameState == MENU)
     {
+        debug->clear();
         if (selectedOption == 1)
         {
             startOption->setColor(Color3B::WHITE);
@@ -378,7 +568,9 @@ void Assignment3::update(float dt) //Game loop
     if (gameState == CONTROLS)
     {
         Move(player, dt);
-        PlayerFire();
+        PlayerAutoCheck(dt);
+        debug->clear();
+        debug->drawDot(player.ship->getPosition(), 4, Color4F::RED);
 
         for (Bullets& it : bullets) //Bullet Movement
         {
@@ -392,6 +584,30 @@ void Assignment3::update(float dt) //Game loop
                 {
                     ResetBullet(it);
                 }
+            }
+        }
+    }
+    if (gameState == BOSS_INTRO)
+    {
+        auto visibleSize = Director::getInstance()->getVisibleSize();
+        Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+        Move(player, dt);
+        debug->clear();
+        debug->drawDot(player.ship->getPosition(), 4, Color4F::RED);
+        enemy.ship->setPosition(Vec2(enemy.ship->getPosition().x, enemy.ship->getPosition().y - (enemy.speed * dt)));
+        if (enemy.ship->getPosition().y <= visibleSize.height - (enemyP1->getContentSize().height / 2) * enemyP1->getScale())
+        {
+            healthBarE->setVisible(true);
+            healthBar->setVisible(true);
+            enemy.ship->setPosition(Vec2(origin.x + visibleSize.width / 2, visibleSize.height - (enemyP1->getContentSize().height / 2) * enemyP1->getScale()));
+            healthBarE->setScale(baseHealthScale, 1);
+            healthBar->setScale(healthBar->getScaleX() + dt, 1);
+            if (healthBar->getScaleX() >= baseHealthScale)
+            {
+                healthScale = baseHealthScale;
+                healthBar->setScale(healthScale, 1);
+                gameState = RUNNING;
             }
         }
     }
@@ -409,24 +625,24 @@ void Assignment3::update(float dt) //Game loop
         Move(player, dt); //Player Movement
         EnemyMove(enemy, dt); //Enemy Movement
 
-        if (enemy.firingAngle > 360) enemy.firingAngle = 0;
+        if (enemy.firingAngle > 360) enemy.firingAngle = 0; //Enemy rotating firing point
         enemy.firingPoint = Vec2(enemy.ship->getPosition().x + cos(enemy.firingAngle) * enemy.firingRadius, enemy.ship->getPosition().y + sin(enemy.firingAngle) * enemy.firingRadius);
         enemy.firingAngle += 1 * dt;
 
-        PlayerFire();
+        PlayerAutoCheck(dt);
 
-        //if (bossAttackTimer >= 8) //Boss Attack Chooser
-        //{
-        //    int rand = (RandomHelper::random_int(0, 3));
-        //    if (rand == 0) enemy.BossAttacks = enemy.SPIRAL;
-        //    if (rand == 1) enemy.BossAttacks = enemy.SINE;
-        //    if (rand == 2) enemy.BossAttacks = enemy.WAVE;
-        //    if (rand == 3) enemy.BossAttacks = enemy.CIRCLE;
-        //    bossAttackTimer = 0;
-        //    enemyFireDelay = enemy.GetFireDelay();
-        //    enemyCanFire = true;
-        //}
-        //bossAttackTimer += dt;
+        if (bossAttackTimer >= enemy.GetAttackSwapDelay()) //Boss Attack Chooser
+        {
+            int rand = (RandomHelper::random_int(0, 3));
+            if (rand == 0) enemy.BossAttacks = enemy.SPIRAL;
+            if (rand == 1) enemy.BossAttacks = enemy.SINE;
+            if (rand == 2) enemy.BossAttacks = enemy.WAVE;
+            if (rand == 3) enemy.BossAttacks = enemy.CIRCLE;
+            bossAttackTimer = 0;
+            enemyFireDelay = enemy.GetFireDelay();
+            enemyCanFire = true;
+        }
+        bossAttackTimer += dt;
 
         if (enemyCanFire) //Enemy Firing
         {
@@ -465,10 +681,14 @@ void Assignment3::update(float dt) //Game loop
                 {
                     ResetBullet(it);
                     enemy.health -= it.bulletDamage;
-                    healthScale -= (4.0 / enemy.maxHealth); //Fix Healthbar to account for damage increase
+                    healthScale -= ((baseHealthScale * it.bulletDamage) / enemy.maxHealth);
                     healthBar->setScale(healthScale, 1);
+                    if (enemy.health <= 0)
+                    {
+                        healthBar->setVisible(false);
+                    }
 
-                    if (RandomHelper::random_int(0, 1) == 0 && chosenPowerup == READY && !(player.hasShield && player.hasBomb && player.hasDamage))
+                    if (RandomHelper::random_int(0, 9) == 0 && chosenPowerup == READY && !(player.hasShield && player.hasBomb && player.hasDamage))
                     {
                         random = RandomHelper::random_int(0, (int)powerupPool.size() - 1);
                         chosenPowerup = powerupPool[random];
@@ -479,7 +699,7 @@ void Assignment3::update(float dt) //Game loop
             } 
         }
 
-        if (chosenPowerup != READY) //Spawns Powerup
+        if (chosenPowerup != READY) //Spawns and moves Powerups
         {
             if (chosenPowerup == SHIELD && !shieldUp->isVisible())
             {
@@ -497,56 +717,7 @@ void Assignment3::update(float dt) //Game loop
                 damageUp->setVisible(true);
             }
 
-            if (shieldUp->isVisible()) //Checks for player collision to powerup for collection, then add functionality
-            {
-                shieldUp->setPosition(shieldUp->getPosition().x, shieldUp->getPosition().y - (player.speed * dt));
-                if (shieldUp->getPosition().y <= 0)
-                {
-                    shieldUp->setVisible(false);
-                    powerupPool.push_back(SHIELD);
-                    chosenPowerup = READY;
-                }
-                if (Collided(shieldUp, player.ship))
-                {
-                    shieldUp->setVisible(false);
-                    playerShield->setVisible(true);
-                    chosenPowerup = READY;
-                    player.hasShield = true;
-                }
-            }
-            if (bombUp->isVisible())
-            {
-                bombUp->setPosition(bombUp->getPosition().x, bombUp->getPosition().y - (player.speed * dt));
-                if (bombUp->getPosition().y <= 0)
-                {
-                    bombUp->setVisible(false);
-                    powerupPool.push_back(BOMB);
-                    chosenPowerup = READY;
-                }
-                if (Collided(bombUp, player.ship))
-                {
-                    bombUp->setVisible(false);
-                    chosenPowerup = READY;
-                    player.hasBomb = true;
-                }
-            }
-            if (damageUp->isVisible())
-            {
-                damageUp->setPosition(damageUp->getPosition().x, damageUp->getPosition().y - (player.speed * dt));
-                if (damageUp->getPosition().y <= 0)
-                {
-                    damageUp->setVisible(false);
-                    powerupPool.push_back(DAMAGE);
-                    chosenPowerup = READY;
-                }
-                if (Collided(damageUp, player.ship))
-                {
-                    damageUp->setVisible(false);
-                    chosenPowerup = READY;
-                    player.hasDamage = true;
-                    player.damage = 1.5;
-                }
-            }
+            MoveUpgrades(dt);
         }
 
         if (player.hasDamage) //Damage powerup timer
@@ -555,7 +726,7 @@ void Assignment3::update(float dt) //Game loop
             if (damageDuration <= 0)
             {
                 damageDuration = 10;
-                player.hasDamage == false;
+                player.hasDamage = false;
                 powerupPool.push_back(DAMAGE);
                 player.damage = 1;
             }
@@ -588,12 +759,15 @@ void Assignment3::update(float dt) //Game loop
                         powerupPool.push_back(SHIELD);
                         playerShield->setVisible(false);
                     }
-                    //else
-                    //{
-                    //    ResetBullet(it);
-                    //    player.ship->setVisible(false);
-                    //    gameState = GAME_OVER;
-                    //}
+                    else
+                    {
+                        if (!player.godMode)
+                        {
+                            ResetBullet(it);
+                            player.ship->setVisible(false);
+                            gameState = GAME_OVER;
+                        }
+                    }
                 }
             }
         }
@@ -654,7 +828,7 @@ void Assignment3::update(float dt) //Game loop
                 if (enemy.BossNumber == enemy.FIRST)
                 {
                     enemy.BossNumber = enemy.SECOND;
-                    enemy.maxHealth = 30;
+                    enemy.maxHealth = enemy.bossP2Health;
                     enemy.health = enemy.maxHealth;
                     bossAttackTimer = 8;
                     gameState = BOSS_PHASE;
@@ -662,36 +836,96 @@ void Assignment3::update(float dt) //Game loop
                 else if (enemy.BossNumber == enemy.SECOND)
                 {
                     enemy.BossNumber = enemy.THIRD;
-                    enemy.maxHealth = 40;
+                    enemy.maxHealth = enemy.bossP3Health;
                     enemy.health = enemy.maxHealth;
                     bossAttackTimer = 8;
                     gameState = BOSS_PHASE;
                 }
-                else gameState = BOSS_DEATH;
+                else
+                {
+                    healthBarE->setVisible(false);
+                    shieldUp->setVisible(false);
+                    damageUp->setVisible(false);
+                    bombUp->setVisible(false);
+                    gameState = BOSS_DEATH;
+                }
             }
         }
     }
     if (gameState == BOSS_PHASE)
     {
-        float middle = Director::getInstance()->getVisibleSize().width / 2;
+        auto visibleSize = Director::getInstance()->getVisibleSize();
+        Vec2 origin = Director::getInstance()->getVisibleOrigin();
+        float middle = visibleSize.width / 2;
         float currentX = enemy.ship->getPosition().x;
         float delta = middle - currentX;
 
+        Move(player, dt);
+        MoveUpgrades(dt);
+        debug->clear();
+        debug->drawDot(player.ship->getPosition(), 4, Color4F::RED);
         enemy.ship->setPosition(currentX + (enemy.speed * dt) * (delta / abs(delta)), enemy.ship->getPosition().y);
         if (delta <= enemy.speed * dt && currentX <= middle || delta >= enemy.speed * dt && currentX >= middle)
         {
             enemy.ship->setPosition(middle, enemy.ship->getPosition().y);
-            //Set Gamestate to phase animiation
-            healthScale = 4;
-            healthBar->setScale(healthScale, 1);
-            enemyCanFire = true;
-            enemyFireDelay = enemy.GetFireDelay();
-            if (enemy.BossNumber == enemy.THIRD)
+            if (enemy.BossNumber == enemy.SECOND)
             {
+                enemyP2Glow->setVisible(true);
+                enemyP2Glow->setOpacity(1);
+            }
+            else if (enemy.BossNumber == enemy.THIRD)
+            {
+                enemyP3Glow->setVisible(true);
+                enemyP3Glow->setOpacity(1);
+            }
+            healthBar->setVisible(true);
+            gameState = PHASE_ANIMATION;
+        }
+    }
+    if (gameState == PHASE_ANIMATION)
+    {
+        Move(player, dt);
+        MoveUpgrades(dt);
+        debug->clear();
+        debug->drawDot(player.ship->getPosition(), 4, Color4F::RED);
+        healthBar->setScale(healthBar->getScaleX() + dt, 1);
+
+        if (enemy.BossNumber == enemy.SECOND)
+        {
+            if (healthBar->getScaleX() <= baseHealthScale / 2) enemyP2Glow->setOpacity(enemyP2Glow->getOpacity() + 1);
+            else
+            {
+                auto tempPos = enemy.ship->getPosition();
+                enemy.ship->setVisible(false);
+                enemy.ship = enemyP2;
+                enemy.ship->setPosition(tempPos);
+                enemy.ship->setVisible(true);
+                enemyP2Glow->setOpacity(enemyP2Glow->getOpacity() - 1);
+            }
+        }
+
+        if (enemy.BossNumber == enemy.THIRD)
+        {
+            if (healthBar->getScaleX() <= baseHealthScale / 2) enemyP3Glow->setOpacity(enemyP3Glow->getOpacity() + 1);
+            else
+            {
+                auto tempPos = enemy.ship->getPosition();
                 enemy.ship->setVisible(false);
                 enemy.ship = enemyA1;
+                enemy.ship->setPosition(tempPos);
                 enemy.ship->setVisible(true);
+                enemyP3Glow->setOpacity(enemyP3Glow->getOpacity() - 1);
             }
+        }
+
+        if (healthBar->getScaleX() >= baseHealthScale)
+        {
+            healthScale = baseHealthScale;
+            healthBar->setScale(healthScale, 1);
+            enemyP2Glow->setVisible(false);
+            enemyP3Glow->setVisible(false);
+            enemyCanFire = true;
+            enemyFireDelay = enemy.GetFireDelay();
             gameState = RUNNING;
         }
     }
@@ -709,44 +943,20 @@ void Assignment3::update(float dt) //Game loop
     if (gameState == VICTORY)
     {
         debug->clear();
-        player.movingUp = true;
-        Move(player, dt);
+        player.ship->setPosition(player.ship->getPosition().x, player.ship->getPositionY() + (player.speed * 2 * dt));
+        if (player.ship->getPosition().y > Director::getInstance()->getVisibleSize().height + player.ship->getContentSize().height)
+        {
+            victoryText->setVisible(true);
+            victoryText2->setVisible(true);
+            gameState = END_SCREEN;
+        }
+    }
+    if (gameState == END_SCREEN)
+    {
+        if (resetGame) ResetToMenu();
     }
     if (gameState == GAME_OVER)
     {
-        auto visibleSize = Director::getInstance()->getVisibleSize();
-        Vec2 origin = Director::getInstance()->getVisibleOrigin();
-
-        debug->clear();
-        enemy.ship->setVisible(false);
-        healthBar->setVisible(false);
-        healthBarE->setVisible(false);
-        background->setVisible(true);
-        startOption->setVisible(true);
-        controlsOption->setVisible(true);
-        shieldUp->setVisible(false);
-        bombUp->setVisible(false);
-        damageUp->setVisible(false);
-        enemy.maxHealth = enemy.bossP1Health;
-        enemy.health = enemy.maxHealth;
-        enemy.ship = enemyP1;
-        enemy.BossNumber = enemy.FIRST;
-        enemy.BossAttacks = enemy.WAVE;
-        healthScale = 4;
-        healthBar->setScale(healthScale, 1);
-        player.hasShield = false;
-        player.hasBomb = false;
-        player.hasDamage = false;
-        player.ship->setPosition(Vec2(origin.x + visibleSize.width / 2,
-                                      origin.y + player.ship->getContentSize().height / 2));
-        enemyP1->setPosition(Vec2(origin.x + visibleSize.width / 2,
-                                  visibleSize.height - (enemyP1->getContentSize().height / 2) * enemyP1->getScale()));
-        powerupPool.clear();
-        powerupPool.push_back(SHIELD);
-        powerupPool.push_back(BOMB);
-        powerupPool.push_back(DAMAGE);
-        chosenPowerup = READY;
-        gameState = MENU;
+        ResetToMenu();
     }
-
 }

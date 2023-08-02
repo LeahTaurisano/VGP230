@@ -10,14 +10,17 @@ public:
 	float health;
 	float maxHealth;
 	int bossP1Health = 100;
-	int bossP2Health = 200;
-	int bossP3Health = 300;
+	int bossP2Health = 150;
+	int bossP3Health = 200;
 	float speed;
 	float damage = 1;
 	Sprite* ship;
 	float animation = 0;
 	bool hasShield = false, hasBomb = false, hasDamage = false;
 	bool movingLeft = false, movingRight = false, movingUp = false, movingDown = false, isFiring = false;
+	bool autoFire = false;
+	float autoFireTimer = 0;
+	bool godMode = false;
 	Vec2 firingPoint;
 	float firingAngle = 0;
 	float firingRadius;
@@ -29,8 +32,7 @@ public:
 		SINE,
 		WAVE,
 		CIRCLE,
-		REGULAR
-	} BossAttacks = CIRCLE;
+	} BossAttacks = WAVE;
 
 	enum BossNumber
 	{
@@ -40,6 +42,8 @@ public:
 	} BossNumber = FIRST;
 
 	float GetFireDelay();
+
+	float GetAttackSwapDelay();
 
 	void BulletSpiralMovement(Bullets it, float dt);
 
