@@ -19,22 +19,34 @@ bool Assignment3::init()
     background = Sprite::create("space.jpg");
     background->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
     background->setRotation(270);
-    background->setScale(2);
+    background->setScale(1.5);
     this->addChild(background, -2);
+
+    starsL.stars = Sprite::create("stars_l.png");
+    starsL.stars->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+    starsL.stars->setScale(1.5);
+    starsL.speed = 250;
+    this->addChild(starsL.stars, -3);
+
+    starsL.starsC = Sprite::create("stars_l.png");
+    starsL.starsC->setPosition(Vec2(visibleSize.width / 2, visibleSize.height + starsL.starsC->getContentSize().height));
+    starsL.starsC->setScale(1.5);
+    this->addChild(starsL.starsC, -3);
+
+    starsS.stars = Sprite::create("stars_s.png");
+    starsS.stars->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+    starsS.stars->setScale(1.5);
+    starsS.speed = 150;
+    this->addChild(starsS.stars, -4);
+
+    starsS.starsC = Sprite::create("stars_s.png");
+    starsS.starsC->setPosition(Vec2(visibleSize.width / 2, visibleSize.height + starsS.starsC->getContentSize().height));
+    starsS.starsC->setScale(2);
+    this->addChild(starsS.starsC, -4);
 
     bombEffect = LayerColor::create(Color4B::GRAY);
     this->addChild(bombEffect, -3);
     bombEffect->setVisible(false);
-
-    //Sprite* test1 = Sprite::create("carriergun1_01.png");
-    //test1->setScale(3);
-    //test1->setPosition(Vec2(visibleSize.width - test1->getContentSize().width * test1->getScale(), visibleSize.height - test1->getContentSize().height * test1->getScale()));
-    //this->addChild(test1, 1);
-
-    //Sprite* test2 = Sprite::create("carriergun2_01.png");
-    //test2->setScale(3);
-    //test2->setPosition(Vec2(origin.x + test2->getContentSize().width * test2->getScale(), visibleSize.height - test2->getContentSize().height * test2->getScale()));
-    //this->addChild(test2, 1);
 
     startOption = Label::createWithSystemFont("Play", "arial.ttf", 20.f);
     startOption->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2.5));
@@ -51,10 +63,15 @@ bool Assignment3::init()
     this->addChild(victoryText, -1);
     victoryText->setVisible(false);
 
-    victoryText2 = Label::createWithSystemFont("Press Enter to return to the main menu\nPress ESC to close the game!", "arial.ttf", 20.f);
-    victoryText2->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2.5));
-    this->addChild(victoryText2, -1);
-    victoryText2->setVisible(false);
+    gameOverText = Label::createWithSystemFont("Game Over", "arial.ttf", 40.f);
+    gameOverText->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 1.5));
+    this->addChild(gameOverText, -1);
+    gameOverText->setVisible(false);
+
+    endText = Label::createWithSystemFont("Press Enter to return to the main menu\nPress ESC to close the game!", "arial.ttf", 20.f);
+    endText->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2.5));
+    this->addChild(endText, -1);
+    endText->setVisible(false);
 
     Label* controls = Label::createWithSystemFont("\nDefeat the Boss while not letting bullets touch your core!\nW: Move Up\nS: Move Down\nA: Move Left\nD: Move Right\nSpacebar: Fire\n\nPickups\nShield: Blocks the next player hit\nBomb: Hit B to clear all bullets on screen\nDamage: Increases damage by 50% for a short time\n\nEnter: Return to Menu", "arial.ttf", 20.f);
     controls->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
@@ -132,7 +149,7 @@ bool Assignment3::init()
     this->addChild(healthBarE, 5);
     healthBarE->setVisible(false);
 
-    shieldUp = Sprite::create("Cheese.png"); //Create shield
+    shieldUp = Sprite::create("spaceshield.png"); //Create shield
     shieldUp->addComponent(CollisionComponent::createCircle(shieldUp->getContentSize().width));
     this->addChild(shieldUp, 0);
     shieldUp->setVisible(false);
@@ -142,12 +159,12 @@ bool Assignment3::init()
     player.ship->addChild(playerShield, 0);
     playerShield->setVisible(false);
 
-    damageUp = Sprite::create("Carrot.png"); //Create damage upgrade
+    damageUp = Sprite::create("damageupgrade.png"); //Create damage upgrade
     damageUp->addComponent(CollisionComponent::createCircle(damageUp->getContentSize().width));
     this->addChild(damageUp, 0);
     damageUp->setVisible(false);
 
-    bombUp = Sprite::create("mushroom.png"); //Create bomb
+    bombUp = Sprite::create("spacebomb.png"); //Create bomb
     bombUp->addComponent(CollisionComponent::createCircle(bombUp->getContentSize().width));
     this->addChild(bombUp, 0);
     bombUp->setVisible(false);
@@ -171,15 +188,16 @@ bool Assignment3::init()
 
     for (Bullets& it : enemyBullets) //Load enemy bullet pool
     {
-        it.bullet = Sprite::create("bullet_enemy.png");
-        it.bullet->setScale(3);
-        it.bullet->addComponent(CollisionComponent::createCircle(it.bullet->getContentSize().width / 2.5 * (it.bullet->getScale() - 1)));
+        it.bullet = Sprite::create("bullet_enemy_orangeorb2.png");
+        it.bullet->setScale(2);
+        //it.bullet->setOpacity(200);
+        it.bullet->addComponent(CollisionComponent::createCircle(it.bullet->getContentSize().width / 2.25 * (it.bullet->getScale())));
         this->addChild(it.bullet, 4);
         it.bullet->setVisible(false);
     }
 
     debug = DrawNode::create(5); //Draw debug nodes
-    this->addChild(debug, 1);
+    this->addChild(debug, 5);
 
     auto keyboardListener = EventListenerKeyboard::create(); 
     keyboardListener->onKeyPressed = [=](EventKeyboard::KeyCode keyCode, Event* event) //Player controls input
@@ -290,7 +308,7 @@ bool Assignment3::init()
                 gameState = MENU;
             }
         }
-        else if (gameState == END_SCREEN)
+        else if (gameState == END_SCREEN || gameState == GAME_OVER)
         {
             if (keyCode == EventKeyboard::KeyCode::KEY_ENTER) resetGame = true;
         }
@@ -501,6 +519,20 @@ void Assignment3::MoveUpgrades(float dt)
     }
 }
 
+void Assignment3::MoveStars(Stars stars, float dt)
+{
+    Vec2 prevPos = stars.stars->getPosition();
+    Vec2 prevPosC = stars.starsC->getPosition();
+
+    stars.stars->setPosition(prevPos.x, prevPos.y - (stars.speed * dt));
+    if (stars.stars->getPosition().y + stars.stars->getContentSize().height <= 0) 
+        stars.stars->setPosition(stars.stars->getPosition().x, Director::getInstance()->getVisibleSize().height + stars.stars->getContentSize().height);
+
+    stars.starsC->setPosition(prevPosC.x, prevPosC.y - (stars.speed * dt));
+    if (stars.starsC->getPosition().y + stars.starsC->getContentSize().height <= 0) 
+        stars.starsC->setPosition(stars.starsC->getPosition().x, Director::getInstance()->getVisibleSize().height + stars.starsC->getContentSize().height);
+}
+
 void Assignment3::ResetToMenu() //Reset and return to menu
 {
     auto visibleSize = Director::getInstance()->getVisibleSize();
@@ -518,7 +550,8 @@ void Assignment3::ResetToMenu() //Reset and return to menu
     bombUp->setVisible(false);
     damageUp->setVisible(false);
     victoryText->setVisible(false);
-    victoryText2->setVisible(false);
+    gameOverText->setVisible(false);
+    endText->setVisible(false);
     playerShield->setVisible(false);
     enemy.maxHealth = enemy.bossP1Health;
     enemy.health = enemy.maxHealth;
@@ -568,6 +601,9 @@ void Assignment3::update(float dt) //Game loop
     if (gameState == CONTROLS)
     {
         Move(player, dt);
+        MoveStars(starsS, dt);
+        MoveStars(starsL, dt);
+
         PlayerAutoCheck(dt);
         debug->clear();
         debug->drawDot(player.ship->getPosition(), 4, Color4F::RED);
@@ -593,6 +629,9 @@ void Assignment3::update(float dt) //Game loop
         Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
         Move(player, dt);
+        MoveStars(starsS, dt);
+        MoveStars(starsL, dt);
+
         debug->clear();
         debug->drawDot(player.ship->getPosition(), 4, Color4F::RED);
         enemy.ship->setPosition(Vec2(enemy.ship->getPosition().x, enemy.ship->getPosition().y - (enemy.speed * dt)));
@@ -603,6 +642,8 @@ void Assignment3::update(float dt) //Game loop
             enemy.ship->setPosition(Vec2(origin.x + visibleSize.width / 2, visibleSize.height - (enemyP1->getContentSize().height / 2) * enemyP1->getScale()));
             healthBarE->setScale(baseHealthScale, 1);
             healthBar->setScale(healthBar->getScaleX() + dt, 1);
+            if (starsL.speed >= 125) starsL.speed -= (20 * dt);
+            if (starsS.speed >= 75) starsS.speed -= (20 * dt);
             if (healthBar->getScaleX() >= baseHealthScale)
             {
                 healthScale = baseHealthScale;
@@ -624,6 +665,8 @@ void Assignment3::update(float dt) //Game loop
         }
         Move(player, dt); //Player Movement
         EnemyMove(enemy, dt); //Enemy Movement
+        MoveStars(starsS, dt);
+        MoveStars(starsL, dt);
 
         if (enemy.firingAngle > 360) enemy.firingAngle = 0; //Enemy rotating firing point
         enemy.firingPoint = Vec2(enemy.ship->getPosition().x + cos(enemy.firingAngle) * enemy.firingRadius, enemy.ship->getPosition().y + sin(enemy.firingAngle) * enemy.firingRadius);
@@ -765,6 +808,15 @@ void Assignment3::update(float dt) //Game loop
                         {
                             ResetBullet(it);
                             player.ship->setVisible(false);
+                            enemy.ship->setVisible(false);
+                            gameOverText->setVisible(true);
+                            healthBarE->setVisible(false);
+                            shieldUp->setVisible(false);
+                            damageUp->setVisible(false);
+                            bombUp->setVisible(false);
+                            endText->setVisible(true);
+                            starsL.speed = 250;
+                            starsS.speed = 150;
                             gameState = GAME_OVER;
                         }
                     }
@@ -862,6 +914,9 @@ void Assignment3::update(float dt) //Game loop
 
         Move(player, dt);
         MoveUpgrades(dt);
+        MoveStars(starsS, dt);
+        MoveStars(starsL, dt);
+
         debug->clear();
         debug->drawDot(player.ship->getPosition(), 4, Color4F::RED);
         enemy.ship->setPosition(currentX + (enemy.speed * dt) * (delta / abs(delta)), enemy.ship->getPosition().y);
@@ -886,6 +941,9 @@ void Assignment3::update(float dt) //Game loop
     {
         Move(player, dt);
         MoveUpgrades(dt);
+        MoveStars(starsS, dt);
+        MoveStars(starsL, dt);
+
         debug->clear();
         debug->drawDot(player.ship->getPosition(), 4, Color4F::RED);
         healthBar->setScale(healthBar->getScaleX() + dt, 1);
@@ -931,32 +989,44 @@ void Assignment3::update(float dt) //Game loop
     }
     if (gameState == BOSS_DEATH)
     {
+        MoveStars(starsS, dt);
+        MoveStars(starsL, dt);
+
         if ((int)animationTime % 2 >= 1) enemy.ship->setPosition(enemy.ship->getPosition().x - (enemy.speed * dt) * 2, enemy.ship->getPosition().y + (enemy.speed * dt) / 3);
         else enemy.ship->setPosition(enemy.ship->getPosition().x + (enemy.speed * dt) * 2, enemy.ship->getPosition().y + (enemy.speed * dt) / 3);
         animationTime += (1 * dt);
         if (animationTime >= 7)
         {
             animationTime = 0;
+            starsL.speed = 250;
+            starsS.speed = 150;
             gameState = VICTORY;
         }
     }
     if (gameState == VICTORY)
     {
+        MoveStars(starsS, dt);
+        MoveStars(starsL, dt);
         debug->clear();
         player.ship->setPosition(player.ship->getPosition().x, player.ship->getPositionY() + (player.speed * 2 * dt));
         if (player.ship->getPosition().y > Director::getInstance()->getVisibleSize().height + player.ship->getContentSize().height)
         {
             victoryText->setVisible(true);
-            victoryText2->setVisible(true);
+            endText->setVisible(true);
             gameState = END_SCREEN;
         }
     }
     if (gameState == END_SCREEN)
     {
+        MoveStars(starsS, dt);
+        MoveStars(starsL, dt);
         if (resetGame) ResetToMenu();
     }
     if (gameState == GAME_OVER)
     {
-        ResetToMenu();
+        debug->clear();
+        MoveStars(starsS, dt);
+        MoveStars(starsL, dt);
+        if (resetGame) ResetToMenu();
     }
 }

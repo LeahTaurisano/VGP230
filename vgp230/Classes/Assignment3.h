@@ -2,6 +2,7 @@
 #include "cocos2d.h"
 #include "Bullets.h"
 #include "Ship.h"
+#include "Stars.h"
 
 USING_NS_CC;
 
@@ -25,6 +26,8 @@ public:
     bool Collided(Sprite* first, Sprite* second);
 
     void MoveUpgrades(float dt);
+
+    void MoveStars(Stars stars, float dt);
 
     void ResetToMenu();
 
@@ -56,6 +59,8 @@ public:
         DAMAGE,
     }chosenPowerup = READY;
 
+    Stars starsL;
+    Stars starsS;
     std::vector<Powerup> powerupPool;
     Ship player;
     Sprite* playerShield;
@@ -78,7 +83,8 @@ public:
     Label* startOption;
     Label* controlsOption;
     Label* victoryText;
-    Label* victoryText2;
+    Label* gameOverText;
+    Label* endText;
     LayerColor* bombEffect;
     bool debugDrawOn = false;
     bool enemyCanFire = true;

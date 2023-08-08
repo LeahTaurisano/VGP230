@@ -811,6 +811,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   <ItemGroup>
     <ClInclude Include="..\Classes\Assignment3.h" />
     <ClInclude Include="..\Classes\Ship.h" />
+    <ClInclude Include="..\Classes\Stars.h" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\AppDelegate.h" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\Assignment1.h" />
     <ClInclude Include="C:\GitHub\VGP230\vgp230\Classes\Assignment2.h" />

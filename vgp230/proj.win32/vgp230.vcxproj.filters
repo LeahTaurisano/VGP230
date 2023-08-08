@@ -639,6 +639,9 @@
     <ClInclude Include="..\Classes\Ship.h">
       <Filter>Source Files\Classes</Filter>
     </ClInclude>
+    <ClInclude Include="..\Classes\Stars.h">
+      <Filter>Source Files\Classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\GitHub\VGP230\vgp230\CMakeLists.txt" />
