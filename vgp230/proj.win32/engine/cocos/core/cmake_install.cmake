@@ -1,4 +1,4 @@
-# Install script for directory: C:/GitHub/VGP230/vgp230/cocos2d/cocos
+# Install script for directory: C:/InClassWork/VGP230/vgp230/cocos2d/cocos
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,7 +34,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/GitHub/VGP230/vgp230/proj.win32/engine/external/cmake_install.cmake")
+  include("C:/InClassWork/VGP230/vgp230/proj.win32/engine/external/cmake_install.cmake")
 
 endif()
 

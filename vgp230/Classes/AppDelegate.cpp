@@ -109,15 +109,43 @@ bool AppDelegate::applicationDidFinishLaunching() {
     }
 
     register_all_packages();
-
     // create a scene. it's an autorelease object
     //auto scene = Assignment1::createScene();
     //auto scene = Assignment2::createScene();
     //auto scene = CollisionTestScene::create();
-    auto scene = Assignment3::createScene();
+    //auto scene = Assignment3::createScene();
+     auto scene = scenes[currentScene]();
 
     // run
     director->runWithScene(scene);
+
+    auto keyboardListener = EventListenerKeyboard::create();
+    keyboardListener->onKeyPressed = [=](EventKeyboard::KeyCode keyCode, Event* event) //Player controls input
+    {
+        switch (keyCode)
+        {
+        case EventKeyboard::KeyCode::KEY_PERIOD:
+        {
+            ++currentScene;
+            if (currentScene > 2) currentScene = 0;
+            auto scene = scenes[currentScene]();
+            Director::getInstance()->replaceScene(scene);
+            break;
+        }
+        case EventKeyboard::KeyCode::KEY_COMMA:
+        {
+            --currentScene;
+            if (currentScene < 0) currentScene = 2;
+            auto scene = scenes[currentScene]();
+            Director::getInstance()->replaceScene(scene);
+            break;
+        }
+
+        default:
+            break;
+        }
+    };
+    director->getEventDispatcher()->addEventListenerWithFixedPriority(keyboardListener, 1);
 
     return true;
 }

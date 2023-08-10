@@ -26,6 +26,9 @@
 #define  _APP_DELEGATE_H_
 
 #include "cocos2d.h"
+#include "Assignment1.h"
+#include "Assignment2.h"
+#include "Assignment3.h"
 
 /**
 @brief    The cocos2d Application.
@@ -58,6 +61,14 @@ public:
     @param  the pointer of the application
     */
     virtual void applicationWillEnterForeground();
+
+private:
+
+    int currentScene = 0;
+    std::vector<Scene* (*)()> scenes
+    {
+     Assignment1::createScene, Assignment2::createScene, Assignment3::createScene
+    };
 };
 
 #endif // _APP_DELEGATE_H_

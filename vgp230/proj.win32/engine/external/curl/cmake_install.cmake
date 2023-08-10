@@ -1,4 +1,4 @@
-# Install script for directory: C:/GitHub/VGP230/vgp230/cocos2d/external/curl
+# Install script for directory: C:/InClassWork/VGP230/vgp230/cocos2d/external/curl
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
