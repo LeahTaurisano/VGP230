@@ -21,32 +21,49 @@ public:
 
   void changeActiveSprite(Sprite* newActive);
 
+  TMXLayer* path;
+  TMXLayer* collision;
+
+  std::vector<std::pair<int, int>> dfsPath;
+  std::vector<std::pair<int, int>> bfsPath;
+  std::pair<int, int> playerPosition;
+  std::pair<int, int> endPosition;
+  std::pair<int, int> enemyPosition;
+
+  const Size* mapSize;
+  const Size* tileSize;
+
+  DrawNode* drawNode;
+
+  bool dfsView = false;
+  bool bfsView = false;
+  bool bfsActive = true;
+
   CREATE_FUNC(MazeScene)
+
 private:
   enum GameState
   {
     Start,
     Running,
     FoundCheese,
-    Victory
+    Victory,
+    GameOver
   } gameState = Start;
-
-  TMXLayer* path;
-  TMXLayer* collision;
 
   Sprite* active;
   Sprite* ratDown;
   Sprite* ratLeft;
   Sprite* ratUp;
   Sprite* ratRight;
-  Sprite* cheese;
-  DrawNode* drawNode;
-
-  std::pair<int, int> playerPosition;
-  std::pair<int, int> endPosition;
-
-  const Size* mapSize;
-  const Size* tileSize;
+  Sprite* enemy;
+  int enemyMoveCD = 20;
+  struct Cheese
+  {
+      Sprite* cheese;
+  };
+  Cheese Collect[200];
+  int cheeseIter = 0;
 
   float cheeseAnimationTimer = 0;
 

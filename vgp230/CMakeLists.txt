@@ -54,26 +54,20 @@ if(APPLE OR WINDOWS)
     cocos_mark_multi_resources(common_res_files RES_TO "Resources" FOLDERS ${GAME_RES_FOLDER})
 endif()
 
+if(MSVC)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++17")
+endif(MSVC)
+
 # add cross-platforms source files and header files 
-
 #list(APPEND GAME_SOURCE
-
-#   Classes/AppDelegate.cpp
-
-# Classes/HelloWorldScene.cpp
-
-#   )
-
+#     Classes/AppDelegate.cpp
+#     )
 #list(APPEND GAME_HEADER
+#     Classes/AppDelegate.h
+#     )
 
-#   Classes/AppDelegate.h
-
-# Classes/HelloWorldScene.h
-
-#   )
 
 file(GLOB GAME_SOURCE "Classes/*.cpp")
-
 file(GLOB GAME_HEADER "Classes/*.h")
 
 if(ANDROID)

@@ -2,11 +2,12 @@
 
 bool MazeScene::init()
 {
-  auto map = TMXTiledMap::create("tmx/desert.tmx");
+  auto map = TMXTiledMap::create("tmx/desert2.tmx");
   path = map->getLayer("Path");
   collision = map->getLayer("Collision");
   auto playerStartLayer = map->getLayer("Player");
   auto playerEndLayer = map->getLayer("Player End");
+  auto EnemyStartLayer = map->getLayer("NPC Start");
 
   mapSize = &path->getLayerSize();
   tileSize = &path->getMapTileSize();
@@ -23,7 +24,14 @@ bool MazeScene::init()
   ratLeft = Sprite::create("mouse-9.png");   //9, 10, 11
   ratLeft->setVisible(false);
 
-  cheese = Sprite::create("Cheese.png");
+  enemy = Sprite::create("mushroom.png");
+
+  for (Cheese& it : Collect)
+  {
+      it.cheese = Sprite::create("Cheese.png");
+      it.cheese->setVisible(false);
+      map->addChild(it.cheese, 4);
+  }
 
   drawNode = DrawNode::create();
 
@@ -31,8 +39,8 @@ bool MazeScene::init()
   map->addChild(ratRight, 5);
   map->addChild(ratDown, 5);
   map->addChild(ratLeft, 5);
+  map->addChild(enemy, 5);
   map->addChild(drawNode, 4);
-  map->addChild(cheese, 4);
 
   active = ratRight;
 
@@ -53,6 +61,12 @@ bool MazeScene::init()
     case EventKeyboard::KeyCode::KEY_UP_ARROW:
       up = true;
       break;
+    case EventKeyboard::KeyCode::KEY_0:
+        bfsView = !bfsView;
+        break;
+    case EventKeyboard::KeyCode::KEY_9:
+        dfsView = !dfsView;
+        break;
     };
   };
 
@@ -61,10 +75,24 @@ bool MazeScene::init()
   this->scheduleUpdate();
 
   initialize(active, playerStartLayer, playerPosition);
-  initialize(cheese, playerEndLayer, endPosition, false);
+  initialize(enemy, EnemyStartLayer, enemyPosition);
+
+  for (int i = 0; i < path->getLayerSize().width; ++i)
+  {
+      for (int j = 0; j < path->getLayerSize().height; ++j)
+      {
+          if (path->getTileAt(Vec2(i, j)) != NULL)
+          {
+              setPosition(Collect[cheeseIter].cheese, FlipY(std::make_pair(i, j)), endPosition, false);
+              Collect[cheeseIter].cheese->setVisible(true);
+              ++cheeseIter;
+          }
+      }
+  }
 
   playerStartLayer->setVisible(false);
   playerEndLayer->setVisible(false);
+  EnemyStartLayer->setVisible(false);
 
   gameState = Running;
 
@@ -123,86 +151,111 @@ bool MazeScene::canSetPosition(std::pair<int, int> p)
 void MazeScene::update(float dt)
 {
   /// TODO: Check if game state is running
-  if (gameState == Running)
-  {
-    if (down)
+    if (gameState == Running)
     {
-      /// TODO: fix line below and determine correct new location
-      auto p = std::make_pair(playerPosition.first, playerPosition.second - 1);
-      if (canSetPosition(p))
-      {
-        /// TODO: call Change Active Sprite
-        changeActiveSprite(ratDown);
-        setPosition(active, p, playerPosition);
-      }
-      else
-      {
-          changeActiveSprite(ratDown);
-          setPosition(active, playerPosition, playerPosition);
-      }
-    }
-    else if (left)
-    {
-      /// TODO: fix line below and determine correct new location
-      auto p = std::make_pair(playerPosition.first - 1, playerPosition.second);
-      if (canSetPosition(p))
-      {
-        /// TODO: call Change Active Sprite
-        changeActiveSprite(ratLeft);
-        setPosition(active, p, playerPosition);
-      }
-      else
-      {
-          changeActiveSprite(ratLeft);
-          setPosition(active, playerPosition, playerPosition);
-      }
-    }
-    else if (up)
-    {
-      /// TODO: fix line below and determine correct new location
-      auto p = std::make_pair(playerPosition.first, playerPosition.second + 1);
-      if (canSetPosition(p))
-      {
-        /// TODO: call Change Active Sprite
-        changeActiveSprite(ratUp);
-        setPosition(active, p, playerPosition);
-      }
-      else
-      {
-          changeActiveSprite(ratUp);
-          setPosition(active, playerPosition, playerPosition);
-      }
-    }
-    else if (right)
-    {
-      /// TODO: fix line below and determine correct new location
-      auto p = std::make_pair(playerPosition.first + 1, playerPosition.second);
-      if (canSetPosition(p))
-      {
-        /// TODO: call Change Active Sprite
-        changeActiveSprite(ratRight);
-        setPosition(active, p, playerPosition);
-      }
-      else
-      {
-          changeActiveSprite(ratRight);
-          setPosition(active, playerPosition, playerPosition);
-      }
-    }
+        if (down)
+        {
+            /// TODO: fix line below and determine correct new location
+            auto p = std::make_pair(playerPosition.first, playerPosition.second - 1);
+            if (canSetPosition(p))
+            {
+                /// TODO: call Change Active Sprite
+                changeActiveSprite(ratDown);
+                setPosition(active, p, playerPosition);
+            }
+            else
+            {
+                changeActiveSprite(ratDown);
+                setPosition(active, playerPosition, playerPosition);
+            }
+        }
+        else if (left)
+        {
+            /// TODO: fix line below and determine correct new location
+            auto p = std::make_pair(playerPosition.first - 1, playerPosition.second);
+            if (canSetPosition(p))
+            {
+                /// TODO: call Change Active Sprite
+                changeActiveSprite(ratLeft);
+                setPosition(active, p, playerPosition);
+            }
+            else
+            {
+                changeActiveSprite(ratLeft);
+                setPosition(active, playerPosition, playerPosition);
+            }
+        }
+        else if (up)
+        {
+            /// TODO: fix line below and determine correct new location
+            auto p = std::make_pair(playerPosition.first, playerPosition.second + 1);
+            if (canSetPosition(p))
+            {
+                /// TODO: call Change Active Sprite
+                changeActiveSprite(ratUp);
+                setPosition(active, p, playerPosition);
+            }
+            else
+            {
+                changeActiveSprite(ratUp);
+                setPosition(active, playerPosition, playerPosition);
+            }
+        }
+        else if (right)
+        {
+            /// TODO: fix line below and determine correct new location
+            auto p = std::make_pair(playerPosition.first + 1, playerPosition.second);
+            if (canSetPosition(p))
+            {
+                /// TODO: call Change Active Sprite
+                changeActiveSprite(ratRight);
+                setPosition(active, p, playerPosition);
+            }
+            else
+            {
+                changeActiveSprite(ratRight);
+                setPosition(active, playerPosition, playerPosition);
+            }
+        }
 
-    /// TODO: check if player has reached the end position, and change game state
-    if (active->getPosition() == cheese->getPosition())
-    {
-        ratUp->setScale(1.3);
-        ratUp->setPosition(active->getPosition());
-        ratDown->setPosition(active->getPosition());
-        ratDown->setScale(1.5);
-        ratLeft->setPosition(active->getPosition());
-        ratLeft->setScale(1.5);
-        ratRight->setPosition(active->getPosition());
-        ratRight->setScale(1.5);
-        gameState = FoundCheese;
-    }
+        if (enemyMoveCD > 0)
+        {
+            enemyMoveCD -= dt;
+        }
+        else
+        {
+            if (canSetPosition(FlipY(bfsPath[bfsPath.size() - 2])))
+            {
+                setPosition(enemy, FlipY(bfsPath[bfsPath.size() - 2]), enemyPosition);
+                enemyMoveCD = 20;
+            }
+        }
+
+        /// TODO: check if player has reached the end position, and change game state
+        for (Cheese it : Collect)
+        {
+            if (active->getPosition() == it.cheese->getPosition() && it.cheese->isVisible())
+            {
+                it.cheese->setVisible(false);
+                --cheeseIter;
+            }
+        }
+        if (cheeseIter == 0)
+        {
+            ratUp->setScale(1.3);
+            ratUp->setPosition(active->getPosition());
+            ratDown->setPosition(active->getPosition());
+            ratDown->setScale(1.5);
+            ratLeft->setPosition(active->getPosition());
+            ratLeft->setScale(1.5);
+            ratRight->setPosition(active->getPosition());
+            ratRight->setScale(1.5);
+            gameState = FoundCheese;
+        }
+        if (active->getPosition() == enemy->getPosition())
+        {
+            gameState = GameOver;
+        }
   }
   /// TODO: check if game state has found the cheese, and apply some victory effect
   if (gameState == FoundCheese)
@@ -213,6 +266,10 @@ void MazeScene::update(float dt)
      else if (rot > 0.5 && active == ratLeft) changeActiveSprite(ratUp);
      if (rot > 0.5) rot = 0;
      rot += dt;
+  }
+  if (gameState == GameOver)
+  {
+      active->setVisible(false);
   }
   ResetInput();
 }

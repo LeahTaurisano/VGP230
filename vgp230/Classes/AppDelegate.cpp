@@ -37,7 +37,8 @@ using namespace cocos2d::experimental;
 
 USING_NS_CC;
 
-static cocos2d::Size designResolutionSize = cocos2d::Size(768, 1024);
+//static cocos2d::Size designResolutionSize = cocos2d::Size(768, 1024); //Tall
+static cocos2d::Size designResolutionSize = cocos2d::Size(1024, 768); //Wide
 static cocos2d::Size smallResolutionSize = cocos2d::Size(480, 320);
 static cocos2d::Size mediumResolutionSize = cocos2d::Size(1024, 768);
 static cocos2d::Size largeResolutionSize = cocos2d::Size(2048, 1536);
@@ -127,7 +128,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
         case EventKeyboard::KeyCode::KEY_PERIOD:
         {
             ++currentScene;
-            if (currentScene > 2) currentScene = 0;
+            if (currentScene > 3) currentScene = 0;
             auto scene = scenes[currentScene]();
             Director::getInstance()->replaceScene(scene);
             break;
@@ -135,7 +136,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
         case EventKeyboard::KeyCode::KEY_COMMA:
         {
             --currentScene;
-            if (currentScene < 0) currentScene = 2;
+            if (currentScene < 0) currentScene = 3;
             auto scene = scenes[currentScene]();
             Director::getInstance()->replaceScene(scene);
             break;
