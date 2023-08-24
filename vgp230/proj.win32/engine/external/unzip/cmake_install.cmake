@@ -1,4 +1,4 @@
-# Install script for directory: C:/GitHub/VGP230/vgp230/cocos2d/external/unzip
+# Install script for directory: C:/Users/LCV2242924/Project/GitHub/VGP230/vgp230/cocos2d/external/unzip
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

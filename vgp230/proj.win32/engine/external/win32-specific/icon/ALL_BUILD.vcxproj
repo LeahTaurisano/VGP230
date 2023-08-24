@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <PreferredToolArchitecture>x64</PreferredToolArchitecture>
   </PropertyGroup>
@@ -25,7 +25,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{82A2CD6B-3DB3-32F6-912A-74CB5BDAA384}</ProjectGuid>
+    <ProjectGuid>{B233C263-E16F-3E19-AA97-0155A2579FF9}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0.22621.0</WindowsTargetPlatformVersion>
     <Platform>Win32</Platform>
@@ -36,22 +36,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Utility</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Utility</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'" Label="Configuration">
     <ConfigurationType>Utility</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'" Label="Configuration">
     <ConfigurationType>Utility</ConfigurationType>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -108,11 +108,11 @@
     </Midl>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CustomBuild Include="C:\GitHub\VGP230\vgp230\cocos2d\external\win32-specific\icon\CMakeLists.txt">
+    <CustomBuild Include="C:\Users\LCV2242924\Project\GitHub\VGP230\vgp230\cocos2d\external\win32-specific\icon\CMakeLists.txt">
       <UseUtf8Encoding>Always</UseUtf8Encoding>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule C:/GitHub/VGP230/vgp230/cocos2d/external/win32-specific/icon/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule C:/Users/LCV2242924/Project/GitHub/VGP230/vgp230/cocos2d/external/win32-specific/icon/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/GitHub/VGP230/vgp230 -BC:/GitHub/VGP230/vgp230/proj.win32 --check-stamp-file C:/GitHub/VGP230/vgp230/proj.win32/engine/external/win32-specific/icon/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/LCV2242924/Project/GitHub/VGP230/vgp230 -BC:/Users/LCV2242924/Project/GitHub/VGP230/vgp230/proj.win32 --check-stamp-file C:/Users/LCV2242924/Project/GitHub/VGP230/vgp230/proj.win32/engine/external/win32-specific/icon/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -120,12 +120,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\GitHub\VGP230\vgp230\cocos2d\external\cmake\CocosExternalConfig.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\GitHub\VGP230\vgp230\proj.win32\engine\external\win32-specific\icon\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\LCV2242924\Project\GitHub\VGP230\vgp230\cocos2d\external\cmake\CocosExternalConfig.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\LCV2242924\Project\GitHub\VGP230\vgp230\proj.win32\engine\external\win32-specific\icon\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule C:/GitHub/VGP230/vgp230/cocos2d/external/win32-specific/icon/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule C:/Users/LCV2242924/Project/GitHub/VGP230/vgp230/cocos2d/external/win32-specific/icon/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/GitHub/VGP230/vgp230 -BC:/GitHub/VGP230/vgp230/proj.win32 --check-stamp-file C:/GitHub/VGP230/vgp230/proj.win32/engine/external/win32-specific/icon/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/LCV2242924/Project/GitHub/VGP230/vgp230 -BC:/Users/LCV2242924/Project/GitHub/VGP230/vgp230/proj.win32 --check-stamp-file C:/Users/LCV2242924/Project/GitHub/VGP230/vgp230/proj.win32/engine/external/win32-specific/icon/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -133,12 +133,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\GitHub\VGP230\vgp230\cocos2d\external\cmake\CocosExternalConfig.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\GitHub\VGP230\vgp230\proj.win32\engine\external\win32-specific\icon\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\LCV2242924\Project\GitHub\VGP230\vgp230\cocos2d\external\cmake\CocosExternalConfig.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\LCV2242924\Project\GitHub\VGP230\vgp230\proj.win32\engine\external\win32-specific\icon\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule C:/GitHub/VGP230/vgp230/cocos2d/external/win32-specific/icon/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule C:/Users/LCV2242924/Project/GitHub/VGP230/vgp230/cocos2d/external/win32-specific/icon/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/GitHub/VGP230/vgp230 -BC:/GitHub/VGP230/vgp230/proj.win32 --check-stamp-file C:/GitHub/VGP230/vgp230/proj.win32/engine/external/win32-specific/icon/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/LCV2242924/Project/GitHub/VGP230/vgp230 -BC:/Users/LCV2242924/Project/GitHub/VGP230/vgp230/proj.win32 --check-stamp-file C:/Users/LCV2242924/Project/GitHub/VGP230/vgp230/proj.win32/engine/external/win32-specific/icon/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -146,12 +146,12 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\GitHub\VGP230\vgp230\cocos2d\external\cmake\CocosExternalConfig.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\GitHub\VGP230\vgp230\proj.win32\engine\external\win32-specific\icon\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\Users\LCV2242924\Project\GitHub\VGP230\vgp230\cocos2d\external\cmake\CocosExternalConfig.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\Users\LCV2242924\Project\GitHub\VGP230\vgp230\proj.win32\engine\external\win32-specific\icon\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkObjects>
-      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule C:/GitHub/VGP230/vgp230/cocos2d/external/win32-specific/icon/CMakeLists.txt</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule C:/Users/LCV2242924/Project/GitHub/VGP230/vgp230/cocos2d/external/win32-specific/icon/CMakeLists.txt</Message>
       <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/GitHub/VGP230/vgp230 -BC:/GitHub/VGP230/vgp230/proj.win32 --check-stamp-file C:/GitHub/VGP230/vgp230/proj.win32/engine/external/win32-specific/icon/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/LCV2242924/Project/GitHub/VGP230/vgp230 -BC:/Users/LCV2242924/Project/GitHub/VGP230/vgp230/proj.win32 --check-stamp-file C:/Users/LCV2242924/Project/GitHub/VGP230/vgp230/proj.win32/engine/external/win32-specific/icon/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
@@ -159,16 +159,16 @@ endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
 exit /b %1
 :cmDone
 if %errorlevel% neq 0 goto :VCEnd</Command>
-      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\GitHub\VGP230\vgp230\cocos2d\external\cmake\CocosExternalConfig.cmake;%(AdditionalInputs)</AdditionalInputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\GitHub\VGP230\vgp230\proj.win32\engine\external\win32-specific\icon\CMakeFiles\generate.stamp</Outputs>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\Users\LCV2242924\Project\GitHub\VGP230\vgp230\cocos2d\external\cmake\CocosExternalConfig.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\Users\LCV2242924\Project\GitHub\VGP230\vgp230\proj.win32\engine\external\win32-specific\icon\CMakeFiles\generate.stamp</Outputs>
       <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</LinkObjects>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\GitHub\VGP230\vgp230\proj.win32\ZERO_CHECK.vcxproj">
-      <Project>{1C8035B8-DC7E-320F-91CD-CAC325CBEFC9}</Project>
+    <ProjectReference Include="C:\Users\LCV2242924\Project\GitHub\VGP230\vgp230\proj.win32\ZERO_CHECK.vcxproj">
+      <Project>{84C72666-831B-3B57-BE3B-839EA7044157}</Project>
       <Name>ZERO_CHECK</Name>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>

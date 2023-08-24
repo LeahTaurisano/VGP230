@@ -30,6 +30,7 @@
 #include "Assignment2.h"
 #include "Assignment3.h"
 #include "MazeScene2.h"
+#include "Week8_HelloMario2.h"
 
 /**
 @brief    The cocos2d Application.
@@ -65,10 +66,10 @@ public:
 
 private:
 
-    int currentScene = 3;
+    int currentScene = 4;
     std::vector<Scene* (*)()> scenes
     {
-     Assignment1::createScene, Assignment2::createScene, Assignment3::createScene, MazeScene2::createScene
+     Assignment1::createScene, Assignment2::createScene, Assignment3::createScene, MazeScene2::createScene, HelloMario2::createScene
     };
 };
 

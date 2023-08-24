@@ -27,6 +27,7 @@
 #include "Assignment2.h"
 #include "CollisionTestScene.h"
 #include "Assignment3.h"
+#include "Week8_HelloMario2.h"
 
 // #define USE_AUDIO_ENGINE 1
 
@@ -128,7 +129,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
         case EventKeyboard::KeyCode::KEY_PERIOD:
         {
             ++currentScene;
-            if (currentScene > 3) currentScene = 0;
+            if (currentScene > 4) currentScene = 0;
             auto scene = scenes[currentScene]();
             Director::getInstance()->replaceScene(scene);
             break;
@@ -136,7 +137,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
         case EventKeyboard::KeyCode::KEY_COMMA:
         {
             --currentScene;
-            if (currentScene < 0) currentScene = 3;
+            if (currentScene < 0) currentScene = 4;
             auto scene = scenes[currentScene]();
             Director::getInstance()->replaceScene(scene);
             break;

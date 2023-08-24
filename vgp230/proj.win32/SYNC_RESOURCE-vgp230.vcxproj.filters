@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CustomBuild Include="C:\GitHub\VGP230\vgp230\proj.win32\CMakeFiles\612b007420ded3b50f9bdf4a35940005\SYNC_RESOURCE-vgp230.rule">
+    <CustomBuild Include="C:\Users\LCV2242924\Project\GitHub\VGP230\vgp230\proj.win32\CMakeFiles\971df3759412decfa51db78d361d0bdf\SYNC_RESOURCE-vgp230.rule">
       <Filter>CMake Rules</Filter>
     </CustomBuild>
-    <CustomBuild Include="C:\GitHub\VGP230\vgp230\CMakeLists.txt" />
+    <CustomBuild Include="C:\Users\LCV2242924\Project\GitHub\VGP230\vgp230\CMakeLists.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="C:\GitHub\VGP230\vgp230\proj.win32\CMakeFiles\SYNC_RESOURCE-vgp230" />
+    <None Include="C:\Users\LCV2242924\Project\GitHub\VGP230\vgp230\proj.win32\CMakeFiles\SYNC_RESOURCE-vgp230" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="CMake Rules">
-      <UniqueIdentifier>{5CB69188-2907-3419-AAC6-7AC2AED4A356}</UniqueIdentifier>
+      <UniqueIdentifier>{A7B2B8B9-EBCF-3AAF-A4EB-886A160BC280}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
